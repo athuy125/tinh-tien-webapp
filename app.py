@@ -47,23 +47,22 @@ elif choice == "Quản lý nợ":
         st.write("**Danh sách hiện tại:**")
         if tu_dien:
             for ten, so_tien in tu_dien.items():
-                tien_bang_chu = num2words(so_tien, lang='vi')
-                st.write(f"👉 **{ten}** nợ **{tien_bang_chu} nghìn đồng**")
+                st.write(f"👉 **{ten}** nợ **{so_tien}**")
         else:
             st.info("Chưa có ai nợ.")
 
     elif tab == "Thêm nợ":
         ten = st.text_input("Tên người nợ")
-        so_tien = st.number_input("Số tiền (nghìn đồng)", 0, step=1)
+        so_tien = st.text_input("Số tiền (có thể nhập chữ hoặc số)")
         if st.button("Thêm"):
-            tu_dien[ten] = so_tien
+            tu_dien[ten] = so_tien  # lưu nguyên văn người nhập
             save_data(tu_dien)
             st.success("Đã thêm nợ.")
 
     elif tab == "Sửa nợ":
         if tu_dien:
             ten = st.selectbox("Chọn người cần sửa", list(tu_dien.keys()))
-            so_moi = st.number_input("Số tiền mới (nghìn)", 0, step=1)
+            so_moi = st.text_input("Nhập số tiền mới (có thể nhập chữ hoặc số)")
             if st.button("Cập nhật"):
                 tu_dien[ten] = so_moi
                 save_data(tu_dien)
