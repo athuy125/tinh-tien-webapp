@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import os
+from num2words import num2words
 
 st.set_page_config(page_title="Công cụ Tính Tiền & Nợ", layout="centered")
 
@@ -41,12 +42,16 @@ elif choice == "Tính tiền nhập hàng":
 elif choice == "Quản lý nợ":
     st.subheader("📝 Quản lý danh sách nợ")
     tab = st.radio("Chọn tác vụ", ["Xem nợ", "Thêm nợ", "Sửa nợ"])
+
     if tab == "Xem nợ":
         st.write("**Danh sách hiện tại:**")
         if tu_dien:
-            st.json(tu_dien)
+            for ten, so_tien in tu_dien.items():
+                tien_bang_chu = num2words(so_tien, lang='vi')
+                st.write(f"👉 **{ten}** nợ **{tien_bang_chu} nghìn đồng**")
         else:
             st.info("Chưa có ai nợ.")
+
     elif tab == "Thêm nợ":
         ten = st.text_input("Tên người nợ")
         so_tien = st.number_input("Số tiền (nghìn đồng)", 0, step=1)
@@ -54,10 +59,14 @@ elif choice == "Quản lý nợ":
             tu_dien[ten] = so_tien
             save_data(tu_dien)
             st.success("Đã thêm nợ.")
-    else:
-        ten = st.selectbox("Chọn người cần sửa", list(tu_dien.keys()))
-        so_moi = st.number_input("Số tiền mới (nghìn)", 0, step=1)
-        if st.button("Cập nhật"):
-            tu_dien[ten] = so_moi
-            save_data(tu_dien)
-            st.success("Đã cập nhật nợ.")
+
+    elif tab == "Sửa nợ":
+        if tu_dien:
+            ten = st.selectbox("Chọn người cần sửa", list(tu_dien.keys()))
+            so_moi = st.number_input("Số tiền mới (nghìn)", 0, step=1)
+            if st.button("Cập nhật"):
+                tu_dien[ten] = so_moi
+                save_data(tu_dien)
+                st.success("Đã cập nhật nợ.")
+        else:
+            st.info("Chưa có ai nợ để sửa.")
