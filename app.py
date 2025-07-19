@@ -4,10 +4,9 @@ import json
 
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
 
-# Tiêu đề lớn đầu trang
 st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
-# CSS: thêm background + chỉnh chữ
+# CSS: Thêm background và chỉnh màu, chữ to
 st.markdown(
     """
     <style>
@@ -15,17 +14,32 @@ st.markdown(
         background: url("background.jpg");
         background-size: cover;
         background-position: center;
+        color: #333333;
     }
-    h1, h2, h3, h4, .stTextInput label, .stNumberInput label, 
+    h1 {
+        font-size: 36px !important;
+        color: #2c3e50;
+        text-align: center;
+    }
+    h2, h3, .stTextInput label, .stNumberInput label, 
     .stSelectbox label, .stRadio label, .stButton button {
         font-size: 22px !important;
-        color: #333333;
+        color: #34495e;
     }
     .stTextInput input, .stNumberInput input {
         font-size: 20px !important;
     }
     .stMarkdown p, .stAlert p {
         font-size: 20px !important;
+    }
+    .stButton button {
+        background-color: #3498db;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 16px;
+    }
+    .stButton button:hover {
+        background-color: #2980b9;
     }
     </style>
     """,
@@ -49,8 +63,6 @@ if username:
             json.dump(tu_dien, f, ensure_ascii=False, indent=4)
 
     tu_dien = load_data()
-
-    st.markdown("<hr style='margin:20px 0'>", unsafe_allow_html=True)
 
     menu = ["Tính tiền lời", "Tính tiền nhập hàng", "Quản lý nợ"]
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
@@ -76,7 +88,6 @@ if username:
 
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
-
         if tu_dien:
             ten = st.selectbox("👉 Chọn người nợ để quản lý:", list(tu_dien.keys()))
             if ten:
@@ -146,6 +157,7 @@ if username:
 
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu sử dụng ứng dụng.")
+
 
 
 
