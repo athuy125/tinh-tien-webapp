@@ -1,3 +1,7 @@
+*.pyc
+__pycache__/
+data_*.json
+background.jpg
 # Python
 __pycache__/
 *.py[cod]
