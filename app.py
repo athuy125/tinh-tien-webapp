@@ -77,20 +77,20 @@ if username:
                 st.info("Chưa có ai nợ để sửa.")
 
         elif tab == "Tính nợ theo số thùng":
-    ten = st.text_input("Tên người nợ")
-    so_thung = st.number_input("Số thùng nợ thêm", 0, step=1)
-    gia_ban = st.number_input("Giá bán / thùng (nghìn đồng)", 0, step=1)
-    if st.button("Tính & Cập nhật nợ"):
-        so_no_moi = so_thung * gia_ban  # số nợ mới tính thêm
-        try:
+            ten = st.text_input("Tên người nợ")
+            so_thung = st.number_input("Số thùng nợ thêm", 0, step=1)
+            gia_ban = st.number_input("Giá bán / thùng (nghìn đồng)", 0, step=1)
+            if st.button("Tính & Cập nhật nợ"):
+                so_no_moi = so_thung * gia_ban  # số nợ mới tính thêm
+                try:
             # Nếu người đó đã nợ, cộng thêm
-            no_cu = int(str(tu_dien.get(ten, "0")).split()[0])  # lấy số đầu tiên, phòng trường hợp có chữ
-        except:
-            no_cu = 0
-        tong_no = no_cu + so_no_moi
-        tu_dien[ten] = f"{tong_no} (Đã nợ {no_cu} + thêm {so_no_moi} từ {so_thung} thùng × {gia_ban})"
-        save_data(tu_dien)
-        st.success(f"Đã tính và cập nhật nợ cho **{ten}**: Tổng nợ mới **{tong_no} nghìn đồng**")
+                    no_cu = int(str(tu_dien.get(ten, "0")).split()[0])  # lấy số đầu tiên, phòng trường hợp có chữ
+                except:
+                    no_cu = 0
+                tong_no = no_cu + so_no_moi
+                tu_dien[ten] = f"{tong_no} (Đã nợ {no_cu} + thêm {so_no_moi} từ {so_thung} thùng × {gia_ban})"
+                save_data(tu_dien)
+                st.success(f"Đã tính và cập nhật nợ cho **{ten}**: Tổng nợ mới **{tong_no} nghìn đồng**")
 
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu sử dụng ứng dụng.")
