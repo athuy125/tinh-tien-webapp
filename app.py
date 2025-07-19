@@ -4,10 +4,14 @@ import json
 
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
 
-# CSS để chữ to và thoáng
+# Tiêu đề lớn đầu trang
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+
+# CSS: cỡ chữ to và thoáng
 st.markdown("""
     <style>
-        h1, h2, h3, h4, h5, h6, .stTextInput label, .stNumberInput label, .stSelectbox label, .stRadio label, .stButton button {
+        h1, h2, h3, h4, h5, h6, .stTextInput label, .stNumberInput label, 
+        .stSelectbox label, .stRadio label, .stButton button {
             font-size: 22px !important;
         }
         .stTextInput input, .stNumberInput input {
@@ -133,7 +137,9 @@ if username:
             tu_dien[ten_moi] = so_tien_moi
             save_data(tu_dien)
             st.success(f"✅ Đã thêm người nợ mới: {ten_moi}")
+
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu sử dụng ứng dụng.")
+
 
 
