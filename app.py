@@ -64,7 +64,7 @@ if username:
 
     tu_dien = load_data()
 
-    menu = ["Tính tiền lời", "Tính tiền nhập hàng", "Quản lý nợ", "Tính thuế"]
+    menu = ["Tính tiền lời", "Tính tiền nhập hàng", "Quản lý nợ", "Tính thuế", "Tính chi phí chuyến đi"]
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
 
     st.markdown("<hr style='margin:20px 0'>", unsafe_allow_html=True)
@@ -125,6 +125,22 @@ if username:
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
         # Phần quản lý nợ cũ giữ nguyên như của bạn
+    elif choice == "Tính chi phí chuyến đi":
+        st.subheader("🚚 Tính toán lợi nhuận sau một chuyến xe đầu kéo")
+    
+        thu_duoc = st.number_input("Số tiền thu được từ chuyến hàng (triệu đồng)", 0.0, step=0.1)
+        cuoc_xe = st.number_input("Chi phí cước xe / thuê xe (triệu đồng)", 0.0, step=0.1)
+        xang_dau = st.number_input("Chi phí xăng dầu (triệu đồng)", 0.0, step=0.1)
+        cau_duong = st.number_input("Phí cầu đường, bến bãi (triệu đồng)", 0.0, step=0.1)
+        sua_chua = st.number_input("Chi phí sửa chữa, bảo dưỡng phát sinh (triệu đồng)", 0.0, step=0.1)
+        an_uong = st.number_input("Chi phí ăn uống, sinh hoạt trên đường (triệu đồng)", 0.0, step=0.1)
+   
+
+        if st.button("✅ Tính lợi nhuận chuyến đi"):
+            tong_chi_phi = cuoc_xe + xang_dau + cau_duong + sua_chua + an_uong 
+            loi_nhuan = thu_duoc - tong_chi_phi
+            st.info(f"👉 **Tổng chi phí chuyến đi:** {tong_chi_phi:.2f} triệu đồng")
+            st.success(f"✅ **Lợi nhuận thực nhận sau chuyến đi:** {loi_nhuan:.2f} triệu đồng")
 
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu sử dụng ứng dụng.")
