@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import json
 
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
+st.set_page_config(page_title="📦 CÔNG CỤ QUẢN LÝ TÀI CHÍNH by Huyhihihi", layout="centered")
 
 st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
