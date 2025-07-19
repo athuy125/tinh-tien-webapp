@@ -1,50 +1,60 @@
 import streamlit as st
 import os
 import json
+import base64
 
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+# Encode ảnh background thành base64
+def get_base64(file_path):
+    with open(file_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
-# CSS: Thêm background và chỉnh màu, chữ to
+bg_base64 = get_base64("pngtree-deep-blue-abstract-wallpaper-design-vector-abstract-background-image_442495.jpg")
+
+# CSS: Thêm background và chỉnh font, màu
 st.markdown(
-    """
+    f"""
     <style>
-    .stApp {
-        background: url("pngtree-deep-blue-abstract-wallpaper-design-vector-abstract-background-image_442495.jpg");
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{bg_base64}");
         background-size: cover;
         background-position: center;
         color: #333333;
-    }
-    h1 {
+    }}
+    h1 {{
         font-size: 36px !important;
-        color: #2c3e50;
+        color: #ffffff;
         text-align: center;
-    }
+        text-shadow: 1px 1px 2px #000;
+    }}
     h2, h3, .stTextInput label, .stNumberInput label, 
-    .stSelectbox label, .stRadio label, .stButton button {
+    .stSelectbox label, .stRadio label, .stButton button {{
         font-size: 22px !important;
-        color: #34495e;
-    }
-    .stTextInput input, .stNumberInput input {
+        color: #ffffff;
+    }}
+    .stTextInput input, .stNumberInput input {{
         font-size: 20px !important;
-    }
-    .stMarkdown p, .stAlert p {
+    }}
+    .stMarkdown p, .stAlert p {{
         font-size: 20px !important;
-    }
-    .stButton button {
+    }}
+    .stButton button {{
         background-color: #3498db;
         color: white;
         border-radius: 8px;
         padding: 8px 16px;
-    }
-    .stButton button:hover {
+    }}
+    .stButton button:hover {{
         background-color: #2980b9;
-    }
+    }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
