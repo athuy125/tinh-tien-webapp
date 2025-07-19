@@ -44,7 +44,7 @@ if username:
             tong = thung_nhap * gia_von
             st.info(f"Cần trả: **{tong} nghìn đồng**")
 
-elif choice == "Quản lý nợ":
+    elif choice == "Quản lý nợ":
     st.subheader("📝 Quản lý danh sách nợ")
     tab = st.radio("Chọn tác vụ", ["Xem nợ", "Thêm nợ", "Sửa nợ", "Tính nợ theo số thùng"])
 
@@ -84,5 +84,6 @@ elif choice == "Quản lý nợ":
             tu_dien[ten] = f"{so_no} (Tính từ {so_thung} thùng × {gia_ban})"
             save_data(tu_dien)
             st.success(f"Đã tính và thêm nợ cho **{ten}**: {so_no} nghìn đồng")
+
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu sử dụng ứng dụng.")
