@@ -87,40 +87,41 @@ if username:
             st.info(f"Cần trả: **{tong} nghìn đồng**")
 
     elif choice == "Tính thuế":
-        st.subheader("🧾 Tính thuế thu nhập cá nhân")
-        luong = st.number_input("Nhập mức lương/tháng (triệu đồng)", 0.0, step=0.1)
+        st.subheader("💵 Tính thuế thu nhập cá nhân (TNCN) và thuế bán hàng")
 
-        if st.button("📊 Tính thuế"):
-            giam_tru = 11  # triệu đồng
-            thu_nhap_tinh_thue = max(luong - giam_tru, 0)
+        tab_thue = st.radio("Chọn loại thuế", ["TNCN (tiền lương)", "Thuế bán hàng"])
 
-            # Hàm tính thuế lũy tiến
-            def tinh_thue(thu_nhap):
-                bac = [
-                    (5, 0.05),
-                    (5, 0.10),
-                    (8, 0.15),
-                    (14, 0.20),
-                    (20, 0.25),
-                    (28, 0.30),
-                    (float('inf'), 0.35)
-                ]
-                thue = 0
-                for muc, ty_le in bac:
-                    if thu_nhap > muc:
-                        thue += muc * ty_le
-                        thu_nhap -= muc
-                    else:
-                        thue += thu_nhap * ty_le
-                        break
-                return thue
+        if tab_thue == "TNCN (tiền lương)":
+            luong = st.number_input("Nhập mức lương/tháng (triệu đồng)", 0.0, step=0.1)
+            if st.button("Tính thuế TNCN"):
+                if luong <= 5:
+                    thue = 0
+                elif luong <= 10:
+                    thue = luong * 0.05
+                elif luong <= 18:
+                    thue = luong * 0.10
+                elif luong <= 32:
+                    thue = luong * 0.15
+                elif luong <= 52:
+                    thue = luong * 0.20
+                elif luong <= 80:
+                    thue = luong * 0.25
+                else:
+                    thue = luong * 0.30
+                con_lai = luong - thue
+                st.info(f"Thuế phải nộp: **{thue:.2f} triệu đồng**")
+                st.success(f"Số tiền còn lại sau thuế: **{con_lai:.2f} triệu đồng**")
 
-            so_thue = tinh_thue(thu_nhap_tinh_thue)
-            thu_nhap_con_lai = luong - so_thue
-
-            st.success(f"Thu nhập tính thuế: **{thu_nhap_tinh_thue:.2f} triệu đồng**")
-            st.info(f"Số thuế phải nộp: **{so_thue:.2f} triệu đồng**")
-            st.success(f"Sau thuế còn lại: **{thu_nhap_con_lai:.2f} triệu đồng**")
+        elif tab_thue == "Thuế bán hàng":
+            st.markdown("Ví dụ tô bún, phở, tạp hóa,... thường chịu thuế GTGT ~10%")
+            hang = st.selectbox("Chọn loại hàng bán", ["Tô bún", "Phở", "Đồ uống", "Tạp hóa", "Khác"])
+            gia_ban = st.number_input("Nhập giá bán (nghìn đồng)", 0.0, step=1.0)
+            if st.button("Tính thuế GTGT & tiền nhận sau thuế"):
+                # Thuế suất mặc định 10%
+                thue_gtgt = gia_ban * 0.10
+                gia_sau_thue = gia_ban - thue_gtgt
+                st.info(f"Thuế GTGT phải nộp: **{thue_gtgt:.0f} nghìn đồng**")
+                st.success(f"Số tiền còn lại sau thuế: **{gia_sau_thue:.0f} nghìn đồng**")
 
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
