@@ -10,12 +10,7 @@ st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 st.markdown(
     """
     <style>
-    .stApp {
-        background: url("pngtree-deep-blue-abstract-wallpaper-design-vector-abstract-background-image_442495.jpg");
-        background-size: cover;
-        background-position: center;
-        color: #333333;
-    }
+
     h1 {
         font-size: 36px !important;
         color: #2c3e50;
