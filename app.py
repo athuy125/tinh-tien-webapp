@@ -77,7 +77,7 @@ if username:
         cuoc_xe = st.number_input("Chi phí cước xe / thuê xe (triệu đồng)", 0.0, step=0.1)
         xang_dau = st.number_input("Chi phí xăng dầu (triệu đồng)", 0.0, step=0.1)
         cau_duong = st.number_input("Phí cầu đường, bến bãi (triệu đồng)", 0.0, step=0.1)
-        sua_chua = …nh (triệu đồng)", 0.0, step=0.1)
+        sua_chua = st.number_input("Chi phí sửa chữa, bảo dưỡng phát sinh (triệu đồng)", 0.0, step=0.1)
         an_uong = st.number_input("Chi phí ăn uống, sinh hoạt trên đường (triệu đồng)", 0.0, step=0.1)
    
 
