@@ -139,31 +139,80 @@ if username:
             st.success(f"✅ Đã thêm: {ten_moi}")
 
     elif choice == "Tính thuế":
-        st.subheader("💵 Tính thuế (theo chuẩn Việt Nam 2025)")
-        tab = st.radio("Chọn loại thuế", ["TNCN (thu nhập cá nhân)", "Thuế bán hàng"])
+        st.subheader("💵 Tính thuế theo quy định năm 2025")
 
-        if tab == "TNCN (thu nhập cá nhân)":
-            st.caption("📌 Thuế TNCN tính theo biểu thuế lũy tiến từng phần (có giảm trừ) – theo Thư viện Pháp luật 2025.")
-            luong = st.number_input("Tổng thu nhập/tháng (triệu đồng)", 0.0)
+        tab = st.radio("Chọn loại thuế", [
+            "TNCN (tiền lương)", 
+            "Thuế định kỳ chuyển khoản cá nhân", 
+            "Thuế bán hàng (GTGT)"
+        ])
+
+        if tab == "TNCN (tiền lương)":
+            st.caption("📌 Áp dụng biểu thuế rút gọn theo quy định mới nhất 2025. "
+                       "Có giảm trừ bản thân (11 triệu/tháng) và người phụ thuộc (4.4 triệu/tháng mỗi người).")
+            luong = st.number_input("Nhập tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
+            phu_thuoc = st.number_input("Số người phụ thuộc", 0, step=1)
+            hop_dong = st.checkbox("Hợp đồng lao động ≥3 tháng?", value=True)
+
             if st.button("Tính thuế TNCN"):
-                # Theo quy định: tính phần lũy tiến từng phần
-                bac = [5, 10, 18, 32, 52, 80]
-                ty_le = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35]
-                so_tien = [0]+bac+[luong]
-                thue = 0
-                for i in range(len(bac)+1):
-                    if luong > so_tien[i]:
-                        thue_phan = min(luong, so_tien[i+1]) - so_tien[i]
-                        thue += thue_phan * ty_le[i]
-                thu_nhap_con_lai = luong - thue
-                st.info(f"✅ Tiền thuế phải nộp: **{thue:.2f} triệu**")
-                st.success(f"👉 Thu nhập còn lại sau thuế: **{thu_nhap_con_lai:.2f} triệu**")
+                # Giảm trừ
+                giam_tru = 11 + phu_thuoc * 4.4
+                tntt = max(luong - giam_tru, 0)
 
-        elif tab == "Thuế bán hàng":
-            doanhthu = st.number_input("Doanh thu bán hàng (triệu đồng)", 0.0)
-            st.caption("📌 Thuế GTGT áp dụng: 10% theo quy định chung.")
-            thue_gtgt = doanhthu * 0.10
-            st.info(f"✅ Thuế GTGT cần nộp: **{thue_gtgt:.2f} triệu đồng**")
+                if not hop_dong:
+                    # Lao động thời vụ, khấu trừ 10% tổng thu nhập
+                    thue = luong * 0.10
+                    phuong_phap = "Khấu trừ 10% (lao động thời vụ <3 tháng)"
+                else:
+                    # Áp dụng biểu thuế rút gọn
+                    t = tntt
+                    if t <= 0:
+                        thue = 0
+                    elif t <= 5:
+                        thue = 0.05 * t
+                    elif t <= 10:
+                        thue = 0.10 * t - 0.25
+                    elif t <= 18:
+                        thue = 0.15 * t - 0.75
+                    elif t <= 32:
+                        thue = 0.20 * t - 1.65
+                    elif t <= 52:
+                        thue = 0.25 * t - 3.25
+                    elif t <= 80:
+                        thue = 0.30 * t - 5.85
+                    else:
+                        thue = 0.35 * t - 9.85
+                    phuong_phap = "Biểu thuế lũy tiến rút gọn"
+
+                con_lai = luong - thue
+                st.info(f"✅ Thu nhập tính thuế (TNTT): **{tntt:.2f} triệu**")
+                st.info(f"📌 Phương pháp tính: {phuong_phap}")
+                st.success(f"💰 Thuế TNCN phải nộp: **{thue:.2f} triệu**")
+                st.success(f"👉 Thu nhập còn lại sau thuế: **{con_lai:.2f} triệu**")
+
+        elif tab == "Thuế định kỳ chuyển khoản cá nhân":
+            st.caption("📌 Nếu chỉ chuyển khoản thông thường (cho, tặng, vay) thường KHÔNG phải nộp thuế.\n"
+                       "⚠️ Nếu kinh doanh, doanh thu >100 triệu/năm phải đóng thuế khoán (theo quy định).")
+            kinh_doanh = st.checkbox("✅ Tôi đang kinh doanh, doanh thu năm >100 triệu")
+
+            if kinh_doanh:
+                tong = st.number_input("Tổng doanh thu năm (triệu đồng)", 0.0, step=0.1)
+                if st.button("Tính thuế kinh doanh"):
+                    thue_gtgt = tong * 0.10  # thuế GTGT 10%
+                    thue_tncn = tong * 0.01  # thuế TNCN tạm tính 1% (có thể thay đổi tùy ngành)
+                    tong_thue = thue_gtgt + thue_tncn
+                    st.info(f"Thuế GTGT (10%): **{thue_gtgt:.2f} triệu**")
+                    st.info(f"Thuế TNCN (1%): **{thue_tncn:.2f} triệu**")
+                    st.success(f"👉 Tổng thuế dự kiến phải nộp: **{tong_thue:.2f} triệu**")
+            else:
+                st.info("✅ Không phải nộp thuế nếu không kinh doanh, doanh thu ≤100 triệu/năm.")
+
+        elif tab == "Thuế bán hàng (GTGT)":
+            st.caption("📌 Hầu hết hàng hóa, dịch vụ chịu thuế GTGT 10% theo quy định.")
+            doanhthu = st.number_input("Doanh thu bán hàng (triệu đồng)", 0.0, step=0.1)
+            if st.button("Tính thuế GTGT"):
+                thue_gtgt = doanhthu * 0.10
+                st.success(f"✅ Thuế GTGT phải nộp: **{thue_gtgt:.2f} triệu đồng**")
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu.")
 
