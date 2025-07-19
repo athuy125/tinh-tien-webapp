@@ -92,7 +92,7 @@ if username:
             tab_thue = st.radio("Chọn loại thuế", ["TNCN (tiền lương)", "Thuế bán hàng"])
 
        
-        st.subheader("💵 Tính thuế theo quy định năm 2025")
+            st.subheader("💵 Tính thuế theo quy định năm 2025")
 
         tab = st.radio("Chọn loại thuế", ["TNCN (tiền lương)", "Thuế định kỳ chuyển khoản cá nhân", "Thuế bán hàng (GTGT)"])
 
