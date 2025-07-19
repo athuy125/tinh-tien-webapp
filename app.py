@@ -68,11 +68,18 @@ if username:
         elif tab == "Sửa nợ":
             if tu_dien:
                 ten = st.selectbox("Chọn người cần sửa", list(tu_dien.keys()))
-                so_moi = st.text_input("Nhập số tiền mới (có thể nhập chữ hoặc số)")
-                if st.button("Cập nhật"):
-                    tu_dien[ten] = so_moi
+                no_cu_raw = str(tu_dien.get(ten, "0"))
+                try:
+            no_cu = int(no_cu_raw.split()[0])  # lấy số đầu tiên
+                except:
+                    no_cu = 0
+                st.write(f"**Số nợ hiện tại của {ten}:** {no_cu} nghìn đồng")
+                so_tra = st.number_input("Nhập số tiền người đó vừa trả (nghìn đồng)", 0, step=1)
+                if st.button("Cập nhật sau khi trả"):
+                    no_moi = max(no_cu - so_tra, 0)  # tránh âm
+                    tu_dien[ten] = f"{no_moi} (Đã trả {so_tra} từ {no_cu})"
                     save_data(tu_dien)
-                    st.success(f"Đã cập nhật nợ cho **{ten}**")
+                    st.success(f"Đã cập nhật nợ cho **{ten}**: Nợ mới là **{no_moi} nghìn đồng**")
             else:
                 st.info("Chưa có ai nợ để sửa.")
 
