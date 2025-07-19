@@ -47,7 +47,7 @@ if username:
 
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
-        tab = st.radio("Chọn tác vụ", ["Xem nợ", "Thêm nợ", "Sửa nợ", "Tính nợ theo số thùng"])
+        tab = st.radio("Chọn tác vụ", ["Xem nợ", "Thêm nợ", "Sửa nợ", "Tính nợ theo số thùng", "Xóa người nợ"])
 
         if tab == "Xem nợ":
             st.write("**Danh sách nợ hiện tại:**")
@@ -98,6 +98,15 @@ if username:
                 tu_dien[ten] = f"{tong_no} (Đã nợ {no_cu} + thêm {so_no_moi} từ {so_thung} thùng × {gia_ban})"
                 save_data(tu_dien)
                 st.success(f"Đã tính và cập nhật nợ cho **{ten}**: Tổng nợ mới **{tong_no} nghìn đồng**")
+        elif tab == "Xóa người nợ":
+            if tu_dien:
+                ten = st.selectbox("Chọn người muốn xóa", list(tu_dien.keys()))
+            if st.button(f"Xóa {ten} khỏi danh sách nợ"):
+                del tu_dien[ten]
+                save_data(tu_dien)
+                st.success(f"Đã xóa **{ten}** khỏi danh sách nợ.")
+        else:
+            st.info("Danh sách nợ đang trống, không có ai để xóa.")
 
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu sử dụng ứng dụng.")
