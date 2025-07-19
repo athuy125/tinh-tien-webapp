@@ -4,7 +4,7 @@ import json
 
 st.set_page_config(page_title="📦 CÔNG CỤ QUẢN LÝ TÀI CHÍNH by Huyhihihi", layout="centered")
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+st.title("📦 CÔNG CỤ QUẢN LÝ TÀI CHÍNH by Huyhihihi")
 
 # CSS: Thêm background và chỉnh màu, chữ to
 st.markdown(
