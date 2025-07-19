@@ -70,7 +70,7 @@ if username:
                 ten = st.selectbox("Chọn người cần sửa", list(tu_dien.keys()))
                 no_cu_raw = str(tu_dien.get(ten, "0"))
                 try:
-            no_cu = int(no_cu_raw.split()[0])  # lấy số đầu tiên
+                no_cu = int(no_cu_raw.split()[0])  # lấy số đầu tiên
                 except:
                     no_cu = 0
                 st.write(f"**Số nợ hiện tại của {ten}:** {no_cu} nghìn đồng")
