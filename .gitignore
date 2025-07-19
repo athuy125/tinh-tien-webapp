@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.pyo
+*.pyd
+*.pdb
+
+# Jupyter / Streamlit
+.ipynb_checkpoints
+*.db
+*.sqlite3
+
+# VSCode / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dữ liệu cá nhân
+data_*.json
