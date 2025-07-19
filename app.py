@@ -5,7 +5,7 @@ import os
 st.set_page_config(page_title="Công cụ Tính Tiền & Nợ", layout="centered")
 
 # Bước 1: Người dùng nhập tên
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 username = st.text_input("🧑 Nhập tên của bạn để bắt đầu:")
 
 if username:
