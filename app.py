@@ -7,24 +7,30 @@ st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by
 # Tiêu đề lớn đầu trang
 st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
-# CSS: cỡ chữ to và thoáng
-st.markdown("""
+# CSS: thêm background + chỉnh chữ
+st.markdown(
+    """
     <style>
-        h1, h2, h3, h4, h5, h6, .stTextInput label, .stNumberInput label, 
-        .stSelectbox label, .stRadio label, .stButton button {
-            font-size: 22px !important;
-        }
-        .stTextInput input, .stNumberInput input {
-            font-size: 20px !important;
-        }
-        .stMarkdown p {
-            font-size: 20px !important;
-        }
-        .stAlert p {
-            font-size: 20px !important;
-        }
+    .stApp {
+        background: url("background.jpg");
+        background-size: cover;
+        background-position: center;
+    }
+    h1, h2, h3, h4, .stTextInput label, .stNumberInput label, 
+    .stSelectbox label, .stRadio label, .stButton button {
+        font-size: 22px !important;
+        color: #333333;
+    }
+    .stTextInput input, .stNumberInput input {
+        font-size: 20px !important;
+    }
+    .stMarkdown p, .stAlert p {
+        font-size: 20px !important;
+    }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
