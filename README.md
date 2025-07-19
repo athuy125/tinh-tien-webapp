@@ -1,16 +1,10 @@
-# 📦 Công cụ Tính Tiền & Quản Lý Nợ
+# 📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi
 
-Một ứng dụng nhỏ viết bằng **Streamlit** để:
-- Tính tiền lời bán hàng
-- Tính tổng tiền cần nhập hàng
-- Quản lý danh sách nợ
+✅ App nhỏ để tính tiền lời, nhập hàng và quản lý danh sách nợ.
+🌸 Giao diện dễ dùng, phù hợp cho người lớn tuổi.
 
-👉 **Mỗi người dùng có dữ liệu riêng**:  
-Khi mở app, nhập tên của bạn → dữ liệu nợ sẽ được lưu vào file `data_<tên>.json`.
+## Hướng dẫn chạy
 
----
-
-## 🚀 Cách chạy (local)
 
 ```bash
 pip install -r requirements.txt
