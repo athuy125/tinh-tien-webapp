@@ -4,7 +4,7 @@ import json
 from docx import Document
 from io import BytesIO
 
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
+st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (phone number)", layout="centered")
 
 # CSS: nền đẹp và chữ sáng
 st.markdown("""
@@ -24,7 +24,7 @@ h2, h3, .stTextInput label, .stNumberInput label,
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (phone number)")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
