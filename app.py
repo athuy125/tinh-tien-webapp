@@ -1,11 +1,10 @@
 import streamlit as st
 import os
 import json
-from datetime import datetime
 
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
 
-# CSS: background + watermark logo
+# CSS: background đẹp (không còn logo & watermark)
 st.markdown("""
 <style>
 .stApp {
@@ -20,25 +19,10 @@ h2, h3, .stTextInput label, .stNumberInput label,
     font-size: 20px !important;
     color: #f8f8f8;
 }
-/* Watermark logo mờ góc phải dưới */
-.stApp::before {
-    content: "";
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 80px;
-    height: 80px;
-    background: url('logo.png') no-repeat;
-    background-size: contain;
-    opacity: 0.1;
-    z-index: 9999;
-}
 </style>
 """, unsafe_allow_html=True)
 
-# Logo đầu trang
-st.image("logo.png", width=120)
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
@@ -61,7 +45,7 @@ if username:
     if is_vip:
         st.success(f"🌟 {username}, bạn đang là THÀNH VIÊN VIP! 🌟")
 
-    # Menu
+    # Menu chính
     menu = [
         "Tính tiền lời", 
         "Tính tiền nhập hàng", 
@@ -71,8 +55,7 @@ if username:
         "🌟 Thông tin VIP & Thanh toán"
     ]
     if is_vip:
-        menu.append("📊 Thống kê & Xuất dữ liệu")  # Chỉ VIP mới có
-
+        menu.append("📊 Thống kê & Xuất dữ liệu") 
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
     st.markdown("<hr style='margin:20px 0'>", unsafe_allow_html=True)
 
@@ -191,7 +174,7 @@ if username:
         vip_amount = st.number_input("Số tiền bạn đã chuyển (nghìn đồng)", 0, step=1)
         secret_code = st.text_input("Nhập mã bí mật bạn nhận được sau khi chuyển")
         if st.button("✅ Xác nhận VIP"):
-            if secret_code == "521985":  # Mã bí mật
+            if secret_code == "521985":  # Mã bí mật 
                 data["is_vip"] = True
                 data["vip_amount"] = vip_amount
                 save_data(data)
@@ -199,22 +182,20 @@ if username:
             else:
                 st.warning("⚠️ Mã không đúng. Vui lòng kiểm tra lại.")
 
-    # Thống kê & Xuất dữ liệu (chỉ VIP)
+    # Thống kê & xuất dữ liệu (chỉ VIP)
     elif choice == "📊 Thống kê & Xuất dữ liệu" and is_vip:
         st.subheader("📊 Thống kê nhanh")
         list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
         tong_so_no = sum(int(str(v).split()[0]) for v in list_no.values() if str(v).split()[0].isdigit())
         st.metric("👥 Số người nợ", len(list_no))
         st.metric("💰 Tổng số tiền nợ (nghìn đồng)", tong_so_no)
-
-        st.markdown("---")
         if st.button("📥 Xuất dữ liệu nợ"):
             json_data = json.dumps(data, ensure_ascii=False, indent=4)
             st.download_button("Tải xuống file JSON", json_data, file_name=f"data_{username}.json")
-
         st.caption("☁️ Gợi ý: Tự động backup lên Google Drive/Dropbox (cần cấu hình thêm).")
 
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu.")
+
 
 
