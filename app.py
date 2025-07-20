@@ -2,9 +2,9 @@ import streamlit as st
 import os
 import json
 
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
+st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)", layout="centered")
 
-# CSS: nền đẹp
+
 st.markdown("""
 <style>
 .stApp {
@@ -22,7 +22,7 @@ h2, h3, .stTextInput label, .stNumberInput label,
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
@@ -229,10 +229,11 @@ if username:
     elif choice == "🌟 Thông tin VIP & Thanh toán":
         st.subheader("🌟 Đăng ký VIP")
         st.markdown("""
+        **🏦 Lưu ý:** Sau khi nạp vip sẽ có người gọi đến cup cấp cho bạn mã vip 
         **🏦 Ngân hàng:** Techcombank  
         **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy  
         **💳 Số tài khoản:** 7937481127  
-        **💰 Nội dung:** VIP + [Tên bạn] + [SĐT]
+        **💰 Nội dung chuyển khoản:** VIP + [Your name] + [phone number]
         """)
         vip_amount = st.number_input("Số tiền đã chuyển (nghìn đồng)", 0, step=1)
         secret_code = st.text_input("Nhập mã bí mật bạn nhận được")
