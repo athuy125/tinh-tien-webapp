@@ -10,10 +10,7 @@ st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by
 st.markdown("""
 <style>
 .stApp {
-    background: url('https://i.imgur.com/L6XG8Pt.jpg');  /* bạn có thể thay URL khác */
-    background-size: cover;
-    background-position: center;
-    color: #f0f0f0;
+
 }
 h1 { font-size:36px !important; text-align:center; color:#fff; text-shadow:1px 1px 2px black;}
 h2, h3, .stTextInput label, .stNumberInput label, 
