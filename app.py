@@ -6,11 +6,13 @@ from io import BytesIO
 
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
 
-# CSS nền đẹp, chữ sáng
 st.markdown("""
 <style>
 .stApp {
-
+    background: url('pngtree-deep-blue-abstract-wallpaper-design-vector-abstract-background-image_442495.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #f0f0f0;
 }
 h1 { font-size:36px !important; text-align:center; color:#fff; text-shadow:1px 1px 2px black;}
 h2, h3, .stTextInput label, .stNumberInput label, 
