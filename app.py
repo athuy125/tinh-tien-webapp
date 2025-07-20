@@ -8,7 +8,7 @@ import streamlit as st
 
 # Thêm PWA header
 st.markdown("""
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="/https://yourdomain.com/manifest.json">
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
