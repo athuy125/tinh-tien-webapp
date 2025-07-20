@@ -172,7 +172,7 @@ if username:
         **💰 Nội dung:** VIP + [Tên bạn] + [SĐT]
         """)
         vip_amount = st.number_input("Số tiền bạn đã chuyển (nghìn đồng)", 0, step=1)
-        secret_code = st.text_input("Nhập mã bí mật bạn nhận được sau khi chuyển")
+        secret_code = st.text_input("Nhập mã bí mật bạn nhận được sau khi chuyển (sau khi chuyển vui lòng đợi ít phút để nhận được cuộc gọi")
         if st.button("✅ Xác nhận VIP"):
             if secret_code == "521985":  # Mã bí mật 
                 data["is_vip"] = True
