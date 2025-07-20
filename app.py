@@ -22,19 +22,53 @@ st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by
 # CSS nền
 st.markdown("""
 <style>
-html, body, [class*="css"] {
-    background-color: #1e1e1e !important;  /* nền tối */
-    color: #fdfdfd !important;            /* chữ trắng ngà */
-}
-h1 { font-size:38px !important; text-align:center; color:#fdfdfd; text-shadow:1px 1px 3px black; }
-h2, h3, .stTextInput label, .stNumberInput label, 
-.stSelectbox label, .stRadio label, .stButton button, .stMetric label {
-    font-size: 21px !important;
+/* Toàn bộ nền */
+html, body, [class*="st-"], [class^="st-"] {
+    background-color: #1e1e1e !important;
     color: #fdfdfd !important;
-    font-weight: 600;
+}
+
+/* Tiêu đề lớn */
+h1, h2, h3 {
+    color: #fdfdfd !important;
+    text-shadow: 1px 1px 3px black;
+}
+
+/* Label, text input, number input, radio label, checkbox label, selectbox label */
+label, .css-1cpxqw2, .css-qrbaxs, .css-1offfwp, .css-1bzt06z, .st-bb, .st-cx, .st-eb {
+    color: #fdfdfd !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+}
+
+/* Text input & number input box nền đậm, chữ sáng */
+input, textarea {
+    background-color: #333 !important;
+    color: #fdfdfd !important;
+    border: 1px solid #555 !important;
+}
+
+/* Sidebar */
+.css-1d391kg, .css-hxt7ib, .css-1d3z3hw {
+    background-color: #2b2b2b !important;
+    color: #fdfdfd !important;
+}
+
+/* Button */
+.stButton>button {
+    background-color: #444 !important;
+    color: #fdfdfd !important;
+    font-size: 18px !important;
+    border-radius: 8px !important;
+}
+
+/* Metric text */
+.css-1ht1j8u, .css-1aumxhk {
+    color: #fdfdfd !important;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
