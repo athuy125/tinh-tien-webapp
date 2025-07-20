@@ -22,11 +22,9 @@ st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by
 # CSS nền
 st.markdown("""
 <style>
-.stApp {
-    background: url('pngtree-deep-blue-abstract-wallpaper-design-vector-abstract-background-image_442495.jpg');
-    background-size: cover;
-    background-position: center;
-    color: #fdfdfd;
+html, body, [class*="css"] {
+    background-color: #1e1e1e !important;  /* nền tối */
+    color: #fdfdfd !important;            /* chữ trắng ngà */
 }
 h1 { font-size:38px !important; text-align:center; color:#fdfdfd; text-shadow:1px 1px 3px black; }
 h2, h3, .stTextInput label, .stNumberInput label, 
@@ -37,6 +35,7 @@ h2, h3, .stTextInput label, .stNumberInput label,
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
 
