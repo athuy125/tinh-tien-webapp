@@ -181,6 +181,69 @@ if username:
                 st.success("🌟 Chúc mừng! Bạn đã trở thành VIP!")
             else:
                 st.warning("⚠️ Mã không đúng, vui lòng kiểm tra.")
+    elif choice == "Tính thuế":
+        if is_vip:
+            st.subheader("💵 Tính thuế theo quy định năm 2025")
+            tab = st.radio("Chọn loại thuế", [
+                "TNCN (tiền lương)", 
+                "Thuế định kỳ chuyển khoản cá nhân", 
+                "Thuế bán hàng (GTGT)"
+            ])
+
+            if tab == "TNCN (tiền lương)":
+                luong = st.number_input("💰 Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
+                phu_thuoc = st.number_input("👨‍👩‍👧‍👦 Số người phụ thuộc", 0, step=1)
+                hop_dong = st.checkbox("Hợp đồng lao động ≥3 tháng?", value=True)
+                if st.button("✅ Tính thuế TNCN"):
+                    giam_tru = 11 + phu_thuoc * 4.4
+                    tntt = max(luong - giam_tru, 0)
+                    if not hop_dong:
+                        thue = luong * 0.10
+                        phuong_phap = "Khấu trừ 10%"
+                    else:
+                        t = tntt
+                        if t <= 0:
+                            thue = 0
+                        elif t <= 5:
+                            thue = 0.05 * t
+                        elif t <= 10:
+                            thue = 0.10 * t - 0.25
+                        elif t <= 18:
+                            thue = 0.15 * t - 0.75
+                        elif t <= 32:
+                            thue = 0.20 * t - 1.65
+                        elif t <= 52:
+                            thue = 0.25 * t - 3.25
+                        elif t <= 80:
+                            thue = 0.30 * t - 5.85
+                        else:
+                            thue = 0.35 * t - 9.85
+                        phuong_phap = "Biểu thuế lũy tiến"
+                    con_lai = luong - thue
+                    st.info(f"TNTT: {tntt:.2f} triệu")
+                    st.info(f"Phương pháp: {phuong_phap}")
+                    st.success(f"Thuế TNCN: {thue:.2f} triệu")
+                    st.success(f"Sau thuế: {con_lai:.2f} triệu")
+
+            elif tab == "Thuế định kỳ chuyển khoản cá nhân":
+                kinh_doanh = st.checkbox("Tôi đang kinh doanh, doanh thu năm >100 triệu")
+                if kinh_doanh:
+                    tong = st.number_input("Tổng doanh thu năm (triệu đồng)", 0.0, step=0.1)
+                    if st.button("✅ Tính thuế"):
+                        thue_gtgt = tong * 0.10
+                        thue_tncn = tong * 0.01
+                        st.info(f"Thuế GTGT: {thue_gtgt:.2f} triệu")
+                        st.info(f"Thuế TNCN: {thue_tncn:.2f} triệu")
+                        st.success(f"Tổng thuế: {(thue_gtgt + thue_tncn):.2f} triệu")
+                else:
+                    st.info("✅ Không phải nộp thuế nếu không kinh doanh, doanh thu ≤100 triệu/năm.")
+
+            elif tab == "Thuế bán hàng (GTGT)":
+                doanhthu = st.number_input("Doanh thu bán hàng (triệu đồng)", 0.0, step=0.1)
+                if st.button("✅ Tính thuế GTGT"):
+                    st.success(f"Thuế GTGT: {doanhthu * 0.10:.2f} triệu")
+        else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để sử dụng tính năng này!")
 
     # Thống kê & Xuất dữ liệu
     elif choice == "📊 Thống kê & Xuất dữ liệu":
