@@ -63,9 +63,9 @@ if username:
     # Tính tiền lời
     if choice == "Tính tiền lời":
         st.subheader("💰 Tính tiền lời khi bán hàng")
-        sl = st.number_input("Số thùng bán", 0, step=1)
-        gia_ban = st.number_input("Giá bán / thùng (nghìn đồng)", 0, step=1)
-        gia_von = st.number_input("Giá vốn / thùng (nghìn đồng)", 0, step=1)
+        sl = st.number_input("Số lượng bán", 0, step=1)
+        gia_ban = st.number_input("Giá bán / số lượng (nghìn đồng)", 0, step=1)
+        gia_von = st.number_input("Giá vốn / số lượng (nghìn đồng)", 0, step=1)
         if st.button("✅ Tính lợi nhuận"):
             loi = (gia_ban - gia_von) * sl
             st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
@@ -73,8 +73,8 @@ if username:
     # Tính tiền nhập hàng
     elif choice == "Tính tiền nhập hàng":
         st.subheader("📦 Tính tiền cần trả khi nhập hàng")
-        sl = st.number_input("Số thùng nhập", 0, step=1)
-        gia_von = st.number_input("Giá vốn / thùng (nghìn đồng)", 0, step=1)
+        sl = st.number_input("Số lượng nhập", 0, step=1)
+        gia_von = st.number_input("Giá vốn / số lượng (nghìn đồng)", 0, step=1)
         if st.button("✅ Tính tổng tiền"):
             tong = sl * gia_von
             st.info(f"Cần trả: **{tong} nghìn đồng**")
