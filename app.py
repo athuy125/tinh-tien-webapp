@@ -26,13 +26,14 @@ st.markdown("""
     background: url('pngtree-deep-blue-abstract-wallpaper-design-vector-abstract-background-image_442495.jpg');
     background-size: cover;
     background-position: center;
-    color: #f0f0f0;
+    color: #fdfdfd;
 }
-h1 { font-size:36px !important; text-align:center; color:#fff; text-shadow:1px 1px 2px black;}
+h1 { font-size:38px !important; text-align:center; color:#fdfdfd; text-shadow:1px 1px 3px black; }
 h2, h3, .stTextInput label, .stNumberInput label, 
-.stSelectbox label, .stRadio label, .stButton button {
-    font-size: 20px !important;
-    color: #f8f8f8;
+.stSelectbox label, .stRadio label, .stButton button, .stMetric label {
+    font-size: 21px !important;
+    color: #fdfdfd !important;
+    font-weight: 600;
 }
 </style>
 """, unsafe_allow_html=True)
