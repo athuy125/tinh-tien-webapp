@@ -4,7 +4,7 @@ import json
 
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
 
-# CSS: background đẹp (không còn logo & watermark)
+# CSS: nền đẹp, giữ màu chữ
 st.markdown("""
 <style>
 .stApp {
@@ -22,7 +22,7 @@ h2, h3, .stTextInput label, .stNumberInput label,
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
@@ -45,17 +45,17 @@ if username:
     if is_vip:
         st.success(f"🌟 {username}, bạn đang là THÀNH VIÊN VIP! 🌟")
 
-    # Menu chính
+    # Menu chính: Luôn hiện cả tính năng VIP
     menu = [
         "Tính tiền lời", 
         "Tính tiền nhập hàng", 
         "Quản lý nợ", 
         "Tính thuế", 
         "💼 Lợi nhuận chuyến xe đầu kéo",
-        "🌟 Thông tin VIP & Thanh toán"
+        "🌟 Thông tin VIP & Thanh toán",
+        "📊 Thống kê & Xuất dữ liệu"
     ]
-    if is_vip:
-        menu.append("📊 Thống kê & Xuất dữ liệu") 
+
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
     st.markdown("<hr style='margin:20px 0'>", unsafe_allow_html=True)
 
@@ -167,35 +167,106 @@ if username:
         st.subheader("🌟 Đăng ký VIP")
         st.markdown("""
         **🏦 Ngân hàng:** Techcombank  
-        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy
-        **💳 Số tài khoản:** 7937481127 
+        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy  
+        **💳 Số tài khoản:** 7937481127  
         **💰 Nội dung:** VIP + [Tên bạn] + [SĐT]
         """)
-        vip_amount = st.number_input("Số tiền bạn đã chuyển (nghìn đồng)", 0, step=1)
-        secret_code = st.text_input("Nhập mã bí mật bạn nhận được sau khi chuyển (sau khi chuyển vui lòng đợi ít phút để nhận được cuộc gọi")
+        vip_amount = st.number_input("Số tiền đã chuyển (nghìn đồng)", 0, step=1)
+        secret_code = st.text_input("Nhập mã bí mật bạn nhận được")
         if st.button("✅ Xác nhận VIP"):
-            if secret_code == "521985":  # Mã bí mật 
+            if secret_code == "521985":
                 data["is_vip"] = True
                 data["vip_amount"] = vip_amount
                 save_data(data)
                 st.success("🌟 Chúc mừng! Bạn đã trở thành VIP!")
             else:
-                st.warning("⚠️ Mã không đúng. Vui lòng kiểm tra lại.")
+                st.warning("⚠️ Mã không đúng, vui lòng kiểm tra.")
+    elif choice == "Tính thuế":
+        if is_vip:
+            st.subheader("💵 Tính thuế theo quy định năm 2025")
 
-    # Thống kê & xuất dữ liệu (chỉ VIP)
-    elif choice == "📊 Thống kê & Xuất dữ liệu" and is_vip:
-        st.subheader("📊 Thống kê nhanh")
-        list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
-        tong_so_no = sum(int(str(v).split()[0]) for v in list_no.values() if str(v).split()[0].isdigit())
-        st.metric("👥 Số người nợ", len(list_no))
-        st.metric("💰 Tổng số tiền nợ (nghìn đồng)", tong_so_no)
-        if st.button("📥 Xuất dữ liệu nợ"):
-            json_data = json.dumps(data, ensure_ascii=False, indent=4)
-            st.download_button("Tải xuống file JSON", json_data, file_name=f"data_{username}.json")
-        st.caption("☁️ Gợi ý: Tự động backup lên Google Drive/Dropbox (cần cấu hình thêm).")
+            tab = st.radio("Chọn loại thuế", [
+                "TNCN (tiền lương)", 
+                "Thuế định kỳ chuyển khoản cá nhân", 
+                "Thuế bán hàng (GTGT)"
+            ])
+
+                if tab == "TNCN (tiền lương)":
+                st.caption("📌 Áp dụng biểu thuế rút gọn mới nhất 2025. Giảm trừ bản thân: 11 triệu/tháng; người phụ thuộc: 4.4 triệu/tháng.")
+                luong = st.number_input("💰 Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
+                phu_thuoc = st.number_input("👨‍👩‍👧‍👦 Số người phụ thuộc", 0, step=1)
+                hop_dong = st.checkbox("Hợp đồng lao động ≥3 tháng?", value=True)
+
+                if st.button("✅ Tính thuế TNCN"):
+                    giam_tru = 11 + phu_thuoc * 4.4
+                    tntt = max(luong - giam_tru, 0)
+
+                if not hop_dong:
+                    thue = luong * 0.10
+                    phuong_phap = "Khấu trừ 10% (lao động thời vụ <3 tháng)"
+                else:
+                    t = tntt
+                    if t <= 0:
+                        thue = 0
+                    elif t <= 5:
+                        thue = 0.05 * t
+                    elif t <= 10:
+                        thue = 0.10 * t - 0.25
+                    elif t <= 18:
+                        thue = 0.15 * t - 0.75
+                    elif t <= 32:
+                        thue = 0.20 * t - 1.65
+                    elif t <= 52:
+                        thue = 0.25 * t - 3.25
+                    elif t <= 80:
+                        thue = 0.30 * t - 5.85
+                    else:
+                        thue = 0.35 * t - 9.85
+                    phuong_phap = "Biểu thuế lũy tiến rút gọn"
+
+                       con_lai = luong - thue
+                    st.info(f"✅ TNTT: **{tntt:.2f} triệu**")
+                    st.info(f"📌 Phương pháp tính: {phuong_phap}")
+                    st.success(f"💰 Thuế TNCN: **{thue:.2f} triệu**")
+                    st.success(f"👉 Sau thuế: **{con_lai:.2f} triệu**")
+    
+                elif tab == "Thuế định kỳ chuyển khoản cá nhân":
+                    st.caption("📌 Nếu chỉ chuyển khoản thông thường không phải nộp thuế. ⚠️ Nếu kinh doanh, doanh thu >100 triệu/năm thì phải đóng thuế.")
+                    kinh_doanh = st.checkbox("✅ Tôi đang kinh doanh, doanh thu năm >100 triệu")
+
+                if kinh_doanh:
+                    tong = st.number_input("💵 Tổng doanh thu năm (triệu đồng)", 0.0, step=0.1)
+                    if st.button("✅ Tính thuế kinh doanh"):
+                        thue_gtgt = tong * 0.10
+                        thue_tncn = tong * 0.01
+                        tong_thue = thue_gtgt + thue_tncn
+                        st.info(f"🧾 Thuế GTGT (10%): **{thue_gtgt:.2f} triệu**")
+                        st.info(f"🧾 Thuế TNCN (1%): **{thue_tncn:.2f} triệu**")
+                        st.success(f"👉 Tổng thuế dự kiến: **{tong_thue:.2f} triệu**")
+                else:
+                    st.info("✅ Không phải nộp thuế nếu không kinh doanh, doanh thu ≤100 triệu/năm.")
+            else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để sử dụng tính năng này!")
+        
+
+    # Thống kê & Xuất dữ liệu
+    elif choice == "📊 Thống kê & Xuất dữ liệu":
+        if is_vip:
+            st.subheader("📊 Thống kê nhanh")
+            list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
+            tong_no = sum(int(str(v).split()[0]) for v in list_no.values() if str(v).split()[0].isdigit())
+            st.metric("👥 Số người nợ", len(list_no))
+            st.metric("💰 Tổng số nợ (nghìn đồng)", tong_no)
+            if st.button("📥 Xuất dữ liệu"):
+                json_data = json.dumps(data, ensure_ascii=False, indent=4)
+                st.download_button("Tải xuống file JSON", json_data, file_name=f"data_{username}.json")
+            st.caption("☁️ Gợi ý: tự động backup lên Google Drive (cần cấu hình).")
+        else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để sử dụng tính năng này!")
 
 else:
     st.info("👉 Vui lòng nhập tên để bắt đầu.")
+
 
 
 
