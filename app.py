@@ -65,32 +65,40 @@ if username:
             loi = (gia_ban - gia_von) * sl
             st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
     elif choice == "🌟 Thông tin VIP & Thanh toán":
-        st.subheader("🌟 Thông tin tài khoản & Đăng ký VIP")
-        st.info("Khi bạn chuyển khoản, tài khoản của bạn sẽ được nâng cấp thành VIP!")
+    st.subheader("🌟 Thông tin tài khoản & Đăng ký VIP")
+    st.info("Khi bạn chuyển khoản, tài khoản của bạn sẽ được nâng cấp thành VIP!")
 
-        st.markdown("""
-        **🏦 Ngân hàng:** Techcombank  
-        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy
-        **💳 Số tài khoản:** 7937481127 
-        **💰 Nội dung chuyển khoản:** VIP + [Tên bạn]
-        """)
+    st.markdown("""
+    **🏦 Ngân hàng:** Techcombank  
+    **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy  
+    **💳 Số tài khoản:** 7937481127  
+    **💰 Nội dung chuyển khoản:** VIP + [Tên bạn] + [SĐT]
+    """)
 
-        st.markdown("---")
-        st.caption("📌 Sau khi chuyển khoản, hãy bấm nút bên dưới để xác nhận bạn đã trở thành VIP.")
+    st.markdown("---")
+    st.caption("📌 Sau khi chuyển khoản, bạn sẽ nhận được **một mã VIP** từ admin. "
+               "Nhập mã đó vào để xác nhận nâng cấp.")
 
-        vip_amount = st.number_input("Nhập số tiền bạn đã chuyển khoản (nghìn đồng)", 0, step=1)
-        if st.button("✅ Tôi đã chuyển khoản, nâng cấp VIP"):
-            if vip_amount > 0:
-                tu_dien["is_vip"] = True
-                tu_dien["vip_amount"] = vip_amount
-                save_data(tu_dien)
-                st.success("🌟 Bạn đã trở thành thành viên VIP! 🌟")
-            else:
-                st.warning("⚠️ Vui lòng nhập số tiền > 0!")
+    vip_amount = st.number_input("Nhập số tiền bạn đã chuyển khoản (nghìn đồng)", 0, step=1)
+    vip_code_input = st.text_input("🔒 Nhập mã VIP bạn nhận được")
 
-       
-        if tu_dien.get("is_vip"):
-            st.info(f"✅ Bạn là VIP. Số tiền đã chuyển khoản: {tu_dien.get('vip_amount', 0)} nghìn đồng.")
+    if st.button("✅ Xác nhận & nâng cấp VIP"):
+        CORRECT_VIP_CODE = "521985"  
+
+        if vip_amount <= 0:
+            st.warning("⚠️ Vui lòng nhập số tiền > 0!")
+        elif vip_code_input.strip() != CORRECT_VIP_CODE:
+            st.error("❌ Sai mã VIP! Vui lòng kiểm tra lại.")
+        else:
+            tu_dien["is_vip"] = True
+            tu_dien["vip_amount"] = vip_amount
+            tu_dien["vip_code"] = vip_code_input.strip()
+            save_data(tu_dien)
+            st.success("🌟 Bạn đã trở thành thành viên VIP! 🌟")
+
+    
+    if tu_dien.get("is_vip"):
+        st.info(f"✅ Bạn là VIP. Số tiền đã chuyển khoản: {tu_dien.get('vip_amount', 0)} nghìn đồng.")
 
     elif choice == "Tính tiền nhập hàng":
         st.subheader("📦 Tính tiền cần trả khi nhập hàng")
