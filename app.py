@@ -47,7 +47,8 @@ if username:
         "Tính tiền nhập hàng", 
         "Quản lý nợ", 
         "Tính thuế", 
-        "💼 Lợi nhuận chuyến xe đầu kéo"
+        "💼 Lợi nhuận chuyến xe đầu kéo",
+        "🌟 Thông tin VIP & Thanh toán"  
     ]
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
 
@@ -61,6 +62,41 @@ if username:
         if st.button("✅ Tính lợi nhuận"):
             loi = (gia_ban - gia_von) * sl
             st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
+    elif choice == "🌟 Thông tin VIP & Thanh toán":
+        st.subheader("🌟 Thông tin tài khoản & VIP")
+
+        st.info("Khi có người chuyển khoản, sẽ tính là **mua gói VIP**!")
+
+        st.markdown("""
+        **🏦 Ngân hàng:** Techcombank  
+        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy
+        **💳 Số tài khoản:** 7937481127 
+        **💰 Nội dung chuyển khoản:** VIP + [Tên bạn]
+        """)
+        
+        st.markdown("---")
+        st.caption("📌 Khi nhận được tiền, hệ thống sẽ tự xem như mua gói VIP và mở khoá tính năng VIP trong tương lai!")
+
+        # (Tùy chọn) Bạn có thể thêm chức năng ghi lại ai đã chuyển khoản:
+        vip_name = st.text_input("Nhập tên người vừa chuyển khoản (nếu có)")
+        vip_amount = st.number_input("Số tiền nhận được (nghìn đồng)", 0, step=1)
+
+        if st.button("💾 Lưu giao dịch VIP"):
+            if vip_name and vip_amount > 0:
+                # Giả sử lưu vào tu_dien luôn, hoặc tạo riêng key VIP_history
+                if "VIP_history" not in tu_dien:
+                    tu_dien["VIP_history"] = []
+                tu_dien["VIP_history"].append({"name": vip_name, "amount": vip_amount})
+                save_data(tu_dien)
+                st.success(f"✅ Đã lưu: {vip_name} - {vip_amount} nghìn đồng")
+            else:
+                st.warning("⚠️ Vui lòng nhập đủ tên và số tiền!")
+        
+        # Hiển thị lịch sử VIP (nếu có)
+        if "VIP_history" in tu_dien:
+            st.markdown("### 📝 Lịch sử giao dịch VIP:")
+            for item in tu_dien["VIP_history"]:
+                st.write(f"- {item['name']}: {item['amount']} nghìn đồng")
 
     elif choice == "Tính tiền nhập hàng":
         st.subheader("📦 Tính tiền cần trả khi nhập hàng")
