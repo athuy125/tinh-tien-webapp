@@ -4,7 +4,19 @@ import streamlit as st
 import os
 import json
 from docx import Document
+import streamlit as st
 
+# Thêm PWA header
+st.markdown("""
+<link rel="manifest" href="/manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(function(reg) { console.log('✅ Service Worker đăng ký thành công:', reg); })
+      .catch(function(err) { console.log('⚠️ Service Worker lỗi:', err); });
+  }
+</script>
+""", unsafe_allow_html=True)
 st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)", layout="centered")
 
 # CSS nền
