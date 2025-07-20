@@ -2,9 +2,9 @@ import streamlit as st
 import os
 import json
 
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
+st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)", layout="centered")
 
-# CSS: background và font
+# CSS đẹp
 st.markdown(
     """
     <style>
@@ -64,41 +64,6 @@ if username:
         if st.button("✅ Tính lợi nhuận"):
             loi = (gia_ban - gia_von) * sl
             st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
-    elif choice == "🌟 Thông tin VIP & Thanh toán":
-        st.subheader("🌟 Thông tin tài khoản & Đăng ký VIP")
-        st.info("Khi bạn chuyển khoản, tài khoản của bạn sẽ được nâng cấp thành VIP!")
-
-        st.markdown("""
-        **🏦 Ngân hàng:** Techcombank  
-        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy  
-        **💳 Số tài khoản:** 7937481127  
-        **💰 Nội dung chuyển khoản:** VIP + [Tên bạn] + [SĐT]
-        """)
-
-        st.markdown("---")
-        st.caption("📌 Sau khi chuyển khoản, bạn sẽ nhận được **một mã VIP** từ admin. "
-               "Nhập mã đó vào để xác nhận nâng cấp.")
-
-        vip_amount = st.number_input("Nhập số tiền bạn đã chuyển khoản (nghìn đồng)", 0, step=1)
-        vip_code_input = st.text_input("🔒 Nhập mã VIP bạn nhận được")
-
-    if st.button("✅ Xác nhận & nâng cấp VIP"):
-        CORRECT_VIP_CODE = "521985"  
-
-        if vip_amount <= 0:
-            st.warning("⚠️ Vui lòng nhập số tiền > 0!")
-        elif vip_code_input.strip() != CORRECT_VIP_CODE:
-            st.error("❌ Sai mã VIP! Vui lòng kiểm tra lại.")
-        else:
-            tu_dien["is_vip"] = True
-            tu_dien["vip_amount"] = vip_amount
-            tu_dien["vip_code"] = vip_code_input.strip()
-            save_data(tu_dien)
-            st.success("🌟 Bạn đã trở thành thành viên VIP! 🌟")
-
-    
-    if tu_dien.get("is_vip"):
-        st.info(f"✅ Bạn là VIP. Số tiền đã chuyển khoản: {tu_dien.get('vip_amount', 0)} nghìn đồng.")
 
     elif choice == "Tính tiền nhập hàng":
         st.subheader("📦 Tính tiền cần trả khi nhập hàng")
@@ -124,10 +89,11 @@ if username:
 
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
-        if tu_dien:
-            ten = st.selectbox("👉 Chọn người nợ:", list(tu_dien.keys()))
+        list_no = {k:v for k,v in tu_dien.items() if k not in ["is_vip","vip_amount"]}
+        if list_no:
+            ten = st.selectbox("👉 Chọn người nợ:", list(list_no.keys()))
             if ten:
-                st.write(f"**Số nợ hiện tại của {ten}:** {tu_dien[ten]}")
+                st.write(f"**Số nợ hiện tại của {ten}:** {list_no[ten]}")
                 action = st.radio("Chọn tác vụ", [
                     "➕ Cộng thêm nợ", 
                     "✅ Trả bớt nợ", 
@@ -138,7 +104,7 @@ if username:
                 if action == "➕ Cộng thêm nợ":
                     them = st.number_input("Số tiền muốn cộng (nghìn đồng)", 0, step=1)
                     if st.button("Cộng thêm"):
-                        try: cu = int(str(tu_dien[ten]).split()[0])
+                        try: cu = int(str(list_no[ten]).split()[0])
                         except: cu = 0
                         moi = cu + them
                         tu_dien[ten] = f"{moi} (Đã nợ {cu} + thêm {them})"
@@ -147,7 +113,7 @@ if username:
                 elif action == "✅ Trả bớt nợ":
                     tra = st.number_input("Số tiền muốn trả (nghìn đồng)", 0, step=1)
                     if st.button("Cập nhật sau khi trả"):
-                        try: cu = int(str(tu_dien[ten]).split()[0])
+                        try: cu = int(str(list_no[ten]).split()[0])
                         except: cu = 0
                         moi = max(cu - tra, 0)
                         tu_dien[ten] = f"{moi} (Đã trả {tra} từ {cu})"
@@ -158,7 +124,7 @@ if username:
                     gia = st.number_input("Giá bán / thùng (nghìn đồng)", 0, step=1)
                     if st.button("Tính & Cập nhật"):
                         them = sl * gia
-                        try: cu = int(str(tu_dien[ten]).split()[0])
+                        try: cu = int(str(list_no[ten]).split()[0])
                         except: cu = 0
                         moi = cu + them
                         tu_dien[ten] = f"{moi} (Đã nợ {cu} + thêm {them})"
@@ -190,6 +156,27 @@ if username:
             save_data(tu_dien)
             st.success(f"✅ Đã thêm: {ten_moi}")
 
+    elif choice == "🌟 Thông tin VIP & Thanh toán":
+        st.subheader("🌟 Thông tin tài khoản & Đăng ký VIP")
+        st.info("Chuyển khoản để nâng cấp VIP. Sau đó liên hệ admin nhận **mật mã**.")
+
+        st.markdown("""
+        **🏦 Ngân hàng:** Techcombank  
+        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy
+        **💳 Số tài khoản:** 7937481127 
+        **💰 Nội dung chuyển khoản:** VIP + [Tên] + [Số điện thoại]
+        """)
+
+        st.markdown("---")
+        ma_vip = st.text_input("🔑 Nhập mật mã VIP do admin cung cấp:")
+        if st.button("✅ Xác nhận và nâng cấp VIP"):
+            if ma_vip == "521985":   # <---  mã thật ở đây
+                tu_dien["is_vip"] = True
+                save_data(tu_dien)
+                st.success("🌟 Bạn đã trở thành thành viên VIP! 🌟")
+            else:
+                st.error("❌ Mật mã không đúng. Liên hệ admin để nhận mã.")
+
     elif choice == "Tính thuế":
         st.subheader("💵 Tính thuế theo quy định năm 2025")
 
@@ -200,13 +187,12 @@ if username:
         ])
 
         if tab == "TNCN (tiền lương)":
-            st.caption("📌 Áp dụng biểu thuế rút gọn mới nhất 2025. "
-                       "Giảm trừ bản thân: 11 triệu/tháng; người phụ thuộc: 4.4 triệu/tháng.")
-            luong = st.number_input("Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
-            phu_thuoc = st.number_input("Số người phụ thuộc", 0, step=1)
+            st.caption("📌 Áp dụng biểu thuế rút gọn mới nhất 2025. Giảm trừ bản thân: 11 triệu/tháng; người phụ thuộc: 4.4 triệu/tháng.")
+            luong = st.number_input("💰 Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
+            phu_thuoc = st.number_input("👨‍👩‍👧‍👦 Số người phụ thuộc", 0, step=1)
             hop_dong = st.checkbox("Hợp đồng lao động ≥3 tháng?", value=True)
 
-            if st.button("Tính thuế TNCN"):
+            if st.button("✅ Tính thuế TNCN"):
                 giam_tru = 11 + phu_thuoc * 4.4
                 tntt = max(luong - giam_tru, 0)
 
@@ -240,26 +226,25 @@ if username:
                 st.success(f"👉 Sau thuế: **{con_lai:.2f} triệu**")
 
         elif tab == "Thuế định kỳ chuyển khoản cá nhân":
-            st.caption("📌 Nếu chỉ chuyển khoản thông thường không phải nộp thuế.\n"
-                       "⚠️ Nếu kinh doanh, doanh thu >100 triệu/năm thì phải đóng thuế.")
+            st.caption("📌 Nếu chỉ chuyển khoản thông thường không phải nộp thuế. ⚠️ Nếu kinh doanh, doanh thu >100 triệu/năm thì phải đóng thuế.")
             kinh_doanh = st.checkbox("✅ Tôi đang kinh doanh, doanh thu năm >100 triệu")
 
             if kinh_doanh:
-                tong = st.number_input("Tổng doanh thu năm (triệu đồng)", 0.0, step=0.1)
-                if st.button("Tính thuế kinh doanh"):
+                tong = st.number_input("💵 Tổng doanh thu năm (triệu đồng)", 0.0, step=0.1)
+                if st.button("✅ Tính thuế kinh doanh"):
                     thue_gtgt = tong * 0.10
                     thue_tncn = tong * 0.01
                     tong_thue = thue_gtgt + thue_tncn
-                    st.info(f"Thuế GTGT (10%): **{thue_gtgt:.2f} triệu**")
-                    st.info(f"Thuế TNCN (1%): **{thue_tncn:.2f} triệu**")
+                    st.info(f"🧾 Thuế GTGT (10%): **{thue_gtgt:.2f} triệu**")
+                    st.info(f"🧾 Thuế TNCN (1%): **{thue_tncn:.2f} triệu**")
                     st.success(f"👉 Tổng thuế dự kiến: **{tong_thue:.2f} triệu**")
             else:
                 st.info("✅ Không phải nộp thuế nếu không kinh doanh, doanh thu ≤100 triệu/năm.")
 
         elif tab == "Thuế bán hàng (GTGT)":
-            st.caption("📌 Hàng hóa, dịch vụ thường chịu thuế GTGT 10%.")
-            doanhthu = st.number_input("Doanh thu bán hàng (triệu đồng)", 0.0, step=0.1)
-            if st.button("Tính thuế GTGT"):
+            st.caption("📌 Hàng hóa, dịch vụ thông thường chịu thuế GTGT 10%.")
+            doanhthu = st.number_input("💵 Doanh thu bán hàng (triệu đồng)", 0.0, step=0.1)
+            if st.button("✅ Tính thuế GTGT"):
                 thue_gtgt = doanhthu * 0.10
                 st.success(f"✅ Thuế GTGT phải nộp: **{thue_gtgt:.2f} triệu đồng**")
 
