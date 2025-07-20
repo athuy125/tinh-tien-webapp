@@ -2,10 +2,10 @@ import streamlit as st
 import os
 import json
 from docx import Document
-from io import BytesIO
 
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
+st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)", layout="centered")
 
+# CSS nền
 st.markdown("""
 <style>
 .stApp {
@@ -23,7 +23,7 @@ h2, h3, .stTextInput label, .stNumberInput label,
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
@@ -46,6 +46,7 @@ if username:
     if is_vip:
         st.success(f"🌟 {username}, bạn đang là THÀNH VIÊN VIP! 🌟")
 
+    # Menu
     menu = [
         "Tính tiền lời", 
         "Tính tiền nhập hàng", 
@@ -78,7 +79,7 @@ if username:
             tong = sl * gia_von
             st.info(f"Cần trả: **{tong} nghìn đồng**")
 
-    # Lợi nhuận chuyến xe
+    # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
         st.subheader("🚚 Tính lợi nhuận 1 chuyến xe đầu kéo")
         doanh_thu = st.number_input("💰 Doanh thu (triệu đồng)", 0.0, step=0.1)
@@ -96,17 +97,14 @@ if username:
     # Quản lý nợ
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
-        list_no = {k: v for k, v in data.items() if k not in ["is_vip","vip_amount"]}
+        list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
         if list_no:
             ten = st.selectbox("👉 Chọn người nợ:", list(list_no.keys()))
             if ten:
                 st.write(f"**Số nợ hiện tại của {ten}:** {list_no[ten]}")
                 action = st.radio("Chọn tác vụ", [
-                    "➕ Cộng thêm nợ", 
-                    "✅ Trả bớt nợ", 
-                    "📦 Tính nợ theo số thùng", 
-                    "✏️ Đổi tên người nợ",
-                    "🗑️ Xóa người nợ"
+                    "➕ Cộng thêm nợ", "✅ Trả bớt nợ", "📦 Tính nợ theo số thùng",
+                    "✏️ Đổi tên người nợ", "🗑️ Xóa người nợ"
                 ])
                 if action == "➕ Cộng thêm nợ":
                     them = st.number_input("Số tiền muốn cộng (nghìn đồng)", 0, step=1)
@@ -164,12 +162,12 @@ if username:
 
     # VIP
     elif choice == "🌟 Thông tin VIP & Thanh toán":
-        st.subheader("🌟 Đăng ký VIP")
+        st.subheader("🌟 Đăng ký VIP (LƯU Ý: SAU KHI ĐĂNG KÝ GÓI VIP VUI LÒNG CHÚ Ý ĐIỆN THOẠI, SẼ CÓ NGƯỜI GỌI ĐẾN CUNG CẤP MÃ VIP CHO BẠN)")
         st.markdown("""
         **🏦 Ngân hàng:** Techcombank  
         **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy  
         **💳 Số tài khoản:** 7937481127  
-        **💰 Nội dung:** VIP + [Tên bạn] + [SĐT]
+        **💰 Nội dung:** VIP + [Your name] + [phone number]
         """)
         vip_amount = st.number_input("Số tiền đã chuyển (nghìn đồng)", 0, step=1)
         secret_code = st.text_input("Nhập mã bí mật bạn nhận được")
@@ -181,105 +179,69 @@ if username:
                 st.success("🌟 Chúc mừng! Bạn đã trở thành VIP!")
             else:
                 st.warning("⚠️ Mã không đúng, vui lòng kiểm tra.")
+
+    # Tính thuế
     elif choice == "Tính thuế":
         if is_vip:
-            st.subheader("💵 Tính thuế theo quy định năm 2025")
-            tab = st.radio("Chọn loại thuế", [
-                "TNCN (tiền lương)", 
-                "Thuế định kỳ chuyển khoản cá nhân", 
-                "Thuế bán hàng (GTGT)"
-            ])
-
+            st.subheader("💵 Tính thuế theo quy định 2025")
+            tab = st.radio("Chọn loại thuế", ["TNCN (tiền lương)", "Thuế kinh doanh", "Thuế bán hàng (GTGT)"])
             if tab == "TNCN (tiền lương)":
-                luong = st.number_input("💰 Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
-                phu_thuoc = st.number_input("👨‍👩‍👧‍👦 Số người phụ thuộc", 0, step=1)
-                hop_dong = st.checkbox("Hợp đồng lao động ≥3 tháng?", value=True)
-                if st.button("✅ Tính thuế TNCN"):
+                luong = st.number_input("Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
+                phu_thuoc = st.number_input("Số người phụ thuộc", 0, step=1)
+                hop_dong = st.checkbox("Hợp đồng ≥3 tháng?", value=True)
+                if st.button("✅ Tính"):
                     giam_tru = 11 + phu_thuoc * 4.4
                     tntt = max(luong - giam_tru, 0)
                     if not hop_dong:
                         thue = luong * 0.10
-                        phuong_phap = "Khấu trừ 10%"
+                        pp = "Khấu trừ 10%"
                     else:
                         t = tntt
-                        if t <= 0:
-                            thue = 0
-                        elif t <= 5:
-                            thue = 0.05 * t
-                        elif t <= 10:
-                            thue = 0.10 * t - 0.25
-                        elif t <= 18:
-                            thue = 0.15 * t - 0.75
-                        elif t <= 32:
-                            thue = 0.20 * t - 1.65
-                        elif t <= 52:
-                            thue = 0.25 * t - 3.25
-                        elif t <= 80:
-                            thue = 0.30 * t - 5.85
-                        else:
-                            thue = 0.35 * t - 9.85
-                        phuong_phap = "Biểu thuế lũy tiến"
-                    con_lai = luong - thue
-                    st.info(f"TNTT: {tntt:.2f} triệu")
-                    st.info(f"Phương pháp: {phuong_phap}")
-                    st.success(f"Thuế TNCN: {thue:.2f} triệu")
-                    st.success(f"Sau thuế: {con_lai:.2f} triệu")
-
-            elif tab == "Thuế định kỳ chuyển khoản cá nhân":
-                kinh_doanh = st.checkbox("Tôi đang kinh doanh, doanh thu năm >100 triệu")
-                if kinh_doanh:
-                    tong = st.number_input("Tổng doanh thu năm (triệu đồng)", 0.0, step=0.1)
-                    if st.button("✅ Tính thuế"):
-                        thue_gtgt = tong * 0.10
-                        thue_tncn = tong * 0.01
-                        st.info(f"Thuế GTGT: {thue_gtgt:.2f} triệu")
-                        st.info(f"Thuế TNCN: {thue_tncn:.2f} triệu")
-                        st.success(f"Tổng thuế: {(thue_gtgt + thue_tncn):.2f} triệu")
-                else:
-                    st.info("✅ Không phải nộp thuế nếu không kinh doanh, doanh thu ≤100 triệu/năm.")
-
-            elif tab == "Thuế bán hàng (GTGT)":
-                doanhthu = st.number_input("Doanh thu bán hàng (triệu đồng)", 0.0, step=0.1)
-                if st.button("✅ Tính thuế GTGT"):
-                    st.success(f"Thuế GTGT: {doanhthu * 0.10:.2f} triệu")
+                        if t<=0: thue=0
+                        elif t<=5: thue=0.05*t
+                        elif t<=10: thue=0.10*t-0.25
+                        elif t<=18: thue=0.15*t-0.75
+                        elif t<=32: thue=0.20*t-1.65
+                        elif t<=52: thue=0.25*t-3.25
+                        elif t<=80: thue=0.30*t-5.85
+                        else: thue=0.35*t-9.85
+                        pp = "Biểu thuế lũy tiến"
+                    con_lai= luong - thue
+                    st.info(f"TNTT: {tntt:.2f} triệu ({pp})")
+                    st.success(f"Thuế: {thue:.2f} triệu | Sau thuế: {con_lai:.2f} triệu")
+            elif tab=="Thuế kinh doanh":
+                dt = st.number_input("Doanh thu năm (triệu)",0.0,step=0.1)
+                if st.button("Tính"):
+                    thue_gtgt=dt*0.10; thue_tncn=dt*0.01
+                    st.success(f"GTGT: {thue_gtgt:.2f} | TNCN: {thue_tncn:.2f} | Tổng: {thue_gtgt+thue_tncn:.2f}")
+            else:
+                dt = st.number_input("Doanh thu bán hàng (triệu)",0.0,step=0.1)
+                if st.button("Tính"):
+                    thue=dt*0.10
+                    st.success(f"Thuế GTGT: {thue:.2f} triệu")
         else:
-            st.warning("🌟 Vui lòng nâng cấp VIP để sử dụng tính năng này!")
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
 
-    # Thống kê & Xuất dữ liệu
-    elif choice == "📊 Thống kê & Xuất dữ liệu":
+    # Thống kê & Xuất
+    elif choice=="📊 Thống kê & Xuất dữ liệu":
         if is_vip:
-            st.subheader("📊 Thống kê")
-            list_no = {k: v for k, v in data.items() if k not in ["is_vip","vip_amount"]}
-            tong_no = sum(int(str(v).split()[0]) for v in list_no.values() if str(v).split()[0].isdigit())
-            st.metric("👥 Số người nợ", len(list_no))
-            st.metric("💰 Tổng nợ", tong_no)
-
+            list_no={k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
+            tong_no=sum(int(str(v).split()[0]) for v in list_no.values() if str(v).split()[0].isdigit())
+            st.metric("Số người nợ",len(list_no))
+            st.metric("Tổng nợ (nghìn)",tong_no)
             if st.button("📥 Xuất JSON"):
-                json_data = json.dumps(data, ensure_ascii=False, indent=4)
-                st.download_button("Tải JSON", json_data, file_name=f"data_{username}.json")
-
-            if st.button("📄 Xuất Word"):
-                doc = Document()
-                doc.add_heading('Danh sách nợ', 0)
-                doc.add_paragraph(f'Số người nợ: {len(list_no)}')
-                doc.add_paragraph(f'Tổng số nợ: {tong_no} nghìn đồng')
-                doc.add_heading('Chi tiết:', level=1)
-                for ten, so in list_no.items():
-                    doc.add_paragraph(f"{ten}: {so}")
-                buffer = BytesIO()
-                doc.save(buffer)
-                buffer.seek(0)
-                st.download_button(
-                    "Tải file Word",
-                    data=buffer,
-                    file_name=f"no_{username}.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                )
+                st.download_button("Tải JSON", json.dumps(data,ensure_ascii=False,indent=4), file_name=f"{username}_data.json")
+            if st.button("📥 Xuất Word"):
+                doc=Document(); doc.add_heading(f"Dữ liệu của {username}",0)
+                for k,v in data.items(): doc.add_paragraph(f"{k}: {v}")
+                tmp="temp.docx"; doc.save(tmp)
+                with open(tmp,"rb") as f:
+                    st.download_button("Tải Word",f, file_name=f"{username}_data.docx")
         else:
-            st.warning("🌟 Vui lòng nâng cấp VIP để sử dụng tính năng này!")
-
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
 else:
-    st.info("👉 Vui lòng nhập tên để bắt đầu.")
+    st.info("👉 Nhập tên để bắt đầu.")
+
 
 
 
