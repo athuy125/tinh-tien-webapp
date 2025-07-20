@@ -191,20 +191,20 @@ if username:
                 "Thuế bán hàng (GTGT)"
             ])
 
-                if tab == "TNCN (tiền lương)":
+            if tab == "TNCN (tiền lương)":
                 st.caption("📌 Áp dụng biểu thuế rút gọn mới nhất 2025. Giảm trừ bản thân: 11 triệu/tháng; người phụ thuộc: 4.4 triệu/tháng.")
                 luong = st.number_input("💰 Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
                 phu_thuoc = st.number_input("👨‍👩‍👧‍👦 Số người phụ thuộc", 0, step=1)
                 hop_dong = st.checkbox("Hợp đồng lao động ≥3 tháng?", value=True)
 
-                if st.button("✅ Tính thuế TNCN"):
+           if st.button("✅ Tính thuế TNCN"):
                     giam_tru = 11 + phu_thuoc * 4.4
                     tntt = max(luong - giam_tru, 0)
 
-                if not hop_dong:
+          if not hop_dong:
                     thue = luong * 0.10
                     phuong_phap = "Khấu trừ 10% (lao động thời vụ <3 tháng)"
-                else:
+           else:
                     t = tntt
                     if t <= 0:
                         thue = 0
@@ -230,7 +230,7 @@ if username:
                     st.success(f"💰 Thuế TNCN: **{thue:.2f} triệu**")
                     st.success(f"👉 Sau thuế: **{con_lai:.2f} triệu**")
     
-                elif tab == "Thuế định kỳ chuyển khoản cá nhân":
+         elif tab == "Thuế định kỳ chuyển khoản cá nhân":
                     st.caption("📌 Nếu chỉ chuyển khoản thông thường không phải nộp thuế. ⚠️ Nếu kinh doanh, doanh thu >100 triệu/năm thì phải đóng thuế.")
                     kinh_doanh = st.checkbox("✅ Tôi đang kinh doanh, doanh thu năm >100 triệu")
 
