@@ -1,4 +1,21 @@
-self.addEventListener('install', function(e) {
+self.addEventListener('install', e => {
   console.log('Service Worker: Installed');
+  e.waitUntil(
+    caches.open('static').then(cache => {
+      return cache.addAll([
+        './',
+        './manifest.json',
+        './icon-192.png',
+        './icon-512.png'
+      ]);
+    })
+  );
 });
-self.addEventListener('fetch', function(event) {});
+
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(response => {
+      return response || fetch(e.request);
+    })
+  );
+});
