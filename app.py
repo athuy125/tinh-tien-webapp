@@ -69,9 +69,9 @@ if username:
         st.info("Khi bạn chuyển khoản, tài khoản của bạn sẽ được nâng cấp thành VIP!")
 
         st.markdown("""
-        **🏦 Ngân hàng:** Vietcombank  
-        **👤 Chủ tài khoản:** Nguyễn Văn A  
-        **💳 Số tài khoản:** 0123456789  
+        **🏦 Ngân hàng:** Techcombank  
+        **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy
+        **💳 Số tài khoản:** 7937481127 
         **💰 Nội dung chuyển khoản:** VIP + [Tên bạn]
         """)
 
