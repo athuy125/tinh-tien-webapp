@@ -213,10 +213,10 @@ if username:
             else:
                 st.warning("⚠️ Mã không đúng, vui lòng kiểm tra.")
 
-    # Tính thuế
-    elif choice == "Tính thuế":
+    # Tính thuế (VIP)
+    if choice == "Tính thuế (VIP)":
         if is_vip:
-            st.subheader("💵 Tính thuế theo quy định 2025")
+            st.subheader("💵 Tính thuế")
             tab = st.radio("Chọn loại thuế", ["TNCN (tiền lương)", "Thuế kinh doanh", "Thuế bán hàng (GTGT)"])
             if tab == "TNCN (tiền lương)":
                 luong = st.number_input("Tổng thu nhập (triệu đồng/tháng)", 0.0, step=0.1)
@@ -255,10 +255,10 @@ if username:
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
 
-    # Thống kê & Xuất
-    elif choice=="📊 Thống kê & Xuất dữ liệu":
+    # Thống kê & Xuất dữ liệu (VIP)
+    elif choice=="📊 Thống kê & Xuất dữ liệu (VIP)":
         if is_vip:
-            list_no={k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
+            list_no={k:v for k,v in data.items() if k not in ["is_vip","vip_amount","logs","notes"]}
             tong_no=sum(int(str(v).split()[0]) for v in list_no.values() if str(v).split()[0].isdigit())
             st.metric("Số người nợ",len(list_no))
             st.metric("Tổng nợ (nghìn)",tong_no)
@@ -272,41 +272,53 @@ if username:
                     st.download_button("Tải Word",f, file_name=f"{username}_data.docx")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+
+    # Ghi chú cá nhân (VIP)
     elif choice == "📝 Ghi chú cá nhân (VIP)":
-      if is_vip:
-        st.subheader("📝 Ghi chú cá nhân")
-        notes = data.get("notes", [])
-        
-        new_note = st.text_area("Thêm ghi chú mới")
-        if st.button("✅ Lưu ghi chú"):
-            if new_note.strip():
-                notes.append(new_note.strip())
-                data["notes"] = notes
-                save_data(data)
-                st.success("Đã lưu ghi chú!")
-                log_action(f"Thêm ghi chú: {new_note.strip()}")
-        
-        st.markdown("---")
-        if notes:
-            st.subheader("📌 Danh sách ghi chú:")
-            for i, note in enumerate(notes):
-                col1, col2 = st.columns([8, 2])
-                with col1:
-                    st.markdown(f"**{i+1}.** {note}")
-                with col2:
-                    if st.button(f"🗑️ Xóa", key=f"xoa_note_{i}"):
-                        notes.pop(i)
+        if is_vip:
+            st.subheader("📝 Ghi chú cá nhân")
+            notes = data.get("notes", [])
+            new_note = st.text_area("Thêm ghi chú mới")
+            if st.button("✅ Lưu ghi chú"):
+                if new_note.strip():
+                    notes.append(new_note.strip())
+                    data["notes"] = notes
+                    save_data(data)
+                    st.success("Đã lưu ghi chú!")
+                    log_action(f"Thêm ghi chú: {new_note.strip()}")
+            st.markdown("---")
+            if notes:
+                st.subheader("📌 Danh sách ghi chú:")
+                for i, note in enumerate(notes, 1):
+                    st.markdown(f"**{i}.** {note}")
+                idx_xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", min_value=1, max_value=len(notes), step=1)
+                if st.button("🗑️ Xóa ghi chú"):
+                    if 1 <= idx_xoa <= len(notes):
+                        removed = notes.pop(idx_xoa-1)
                         data["notes"] = notes
                         save_data(data)
-                        st.success("Đã xóa ghi chú!")
-                        log_action(f"Xóa ghi chú: {note}")
-                        st.experimental_rerun()  # làm mới giao diện
+                        st.success(f"Đã xóa: {removed}")
+                        log_action(f"Xóa ghi chú: {removed}")
+            else:
+                st.info("Chưa có ghi chú nào.")
         else:
-            st.info("Chưa có ghi chú nào.")
-    else:
-        st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
 
+    # Máy tính phần trăm (VIP)
+    elif choice == "📊 Máy tính phần trăm (VIP)":
+        if is_vip:
+            st.subheader("📊 Máy tính phần trăm")
+            so_goc = st.number_input("Giá trị gốc", 0.0, step=0.1)
+            phan_tram = st.number_input("Tỷ lệ phần trăm (%)", 0.0, step=0.1)
+            phep = st.radio("Chọn phép tính", ["Tăng thêm", "Giảm bớt"])
+            if st.button("✅ Tính"):
+                ket_qua = so_goc * (1 + phan_tram/100) if phep=="Tăng thêm" else so_goc * (1 - phan_tram/100)
+                st.success(f"Kết quả: {ket_qua:.2f}")
+                log_action(f"Tính phần trăm: {phep} {phan_tram}% của {so_goc} = {ket_qua}")
+        else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
 
+    # Nhật ký hoạt động (VIP)
     elif choice == "📜 Nhật ký hoạt động (VIP)":
         if is_vip:
             st.subheader("📜 Nhật ký hoạt động")
@@ -318,11 +330,8 @@ if username:
                 st.info("Chưa có hoạt động nào.")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
-
 else:
     st.info("👉 Nhập tên để bắt đầu.")
-
-
 
 
 
