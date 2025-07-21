@@ -17,7 +17,7 @@ st.markdown("""
   }
 </script>
 """, unsafe_allow_html=True)
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)", layout="centered")
+st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi ", layout="centered")
 
 # CSS nền
 st.markdown("""
@@ -71,7 +71,7 @@ input, textarea {
 
 
 
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi (Call 0937481127 if you want to contact)")
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi ")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
@@ -210,7 +210,7 @@ if username:
 
     # VIP
     elif choice == "🌟 Thông tin VIP & Thanh toán":
-        st.subheader("🌟 Đăng ký VIP (LƯU Ý: SAU KHI ĐĂNG KÝ GÓI VIP VUI LÒNG CHÚ Ý ĐIỆN THOẠI, SẼ CÓ NGƯỜI GỌI ĐẾN CUNG CẤP MÃ VIP CHO BẠN)")
+        st.subheader("🌟 Đăng ký VIP (LƯU Ý: SAU KHI ĐĂNG KÝ GÓI VIP VUI LÒNG CHÚ Ý ĐIỆN THOẠI, SẼ CÓ NGƯỜI GỌI ĐẾN CUNG CẤP MÃ VIP CHO BẠN, GỌI SỐ 0937481127 nếu muốn liên hệ)")
         st.markdown("""
         **🏦 Ngân hàng:** Techcombank  
         **👤 Chủ tài khoản:** Đỗ Hoàng Gia Huy  
