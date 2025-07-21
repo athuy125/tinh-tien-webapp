@@ -291,19 +291,20 @@ if username:
                 st.subheader("📌 Danh sách ghi chú:")
                 for i, note in enumerate(notes, 1):
                     st.markdown(f"**{i}.** {note}")
-                idx_xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", min_value=1, max_value=len(notes), step=1)
+                xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", 0, step=1)
                 if st.button("🗑️ Xóa ghi chú"):
-                    if 1 <= idx_xoa <= len(notes):
-                        removed = notes.pop(idx_xoa-1)
+                    if 1 <= xoa <= len(notes):
+                        removed = notes.pop(xoa-1)
                         data["notes"] = notes
                         save_data(data)
-                        st.success(f"Đã xóa: {removed}")
+                        st.success(f"Đã xóa ghi chú: {removed}")
                         log_action(f"Xóa ghi chú: {removed}")
+                    else:
+                        st.warning("⚠️ Số thứ tự không hợp lệ!")
             else:
                 st.info("Chưa có ghi chú nào.")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
-
     # Máy tính phần trăm (VIP)
     elif choice == "📊 Máy tính phần trăm (VIP)":
         if is_vip:
@@ -324,7 +325,7 @@ if username:
             st.subheader("📜 Nhật ký hoạt động")
             logs = data.get("logs", [])
             if logs:
-                for log in reversed(logs[-50:]):
+                for log in reversed(logs[-100:]):  # hiển thị tối đa 100 log mới nhất
                     st.markdown(f"- {log}")
             else:
                 st.info("Chưa có hoạt động nào.")
