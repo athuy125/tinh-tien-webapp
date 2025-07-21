@@ -272,7 +272,7 @@ if username:
                     st.download_button("Tải Word",f, file_name=f"{username}_data.docx")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
-     elif choice == "📝 Ghi chú cá nhân (VIP)":
+    elif choice == "📝 Ghi chú cá nhân (VIP)":
         if is_vip:
             st.subheader("📝 Ghi chú cá nhân")
             notes = data.get("notes", [])
@@ -299,7 +299,7 @@ if username:
             phan_tram = st.number_input("Tỷ lệ phần trăm (%)", 0.0, step=0.1)
             phep = st.radio("Chọn phép tính", ["Tăng thêm", "Giảm bớt"])
             if st.button("✅ Tính"):
-                ket_qua = so_goc * (1 + phan_tram/100) if phep=="Tăng thêm" else so_goc * (1 - phan_tram/100)
+                ket_qua = so_goc * (1 + phan_tram/100) if phep == "Tăng thêm" else so_goc * (1 - phan_tram/100)
                 st.success(f"Kết quả: {ket_qua:.2f}")
                 log_action(f"Tính phần trăm: {phep} {phan_tram}% của {so_goc} = {ket_qua}")
         else:
@@ -319,8 +319,6 @@ if username:
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
-
-
 
 
 
