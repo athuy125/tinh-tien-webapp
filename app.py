@@ -1,14 +1,12 @@
-import zipfile
-import requests
 import streamlit as st
 import os
 import json
 from docx import Document
-import streamlit as st
+from datetime import datetime
 
-# Thêm PWA header
+# PWA header (nếu muốn)
 st.markdown("""
-<link rel="manifest" href="/https://yourdomain.com/manifest.json">
+<link rel="manifest" href="/manifest.json">
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
@@ -17,61 +15,38 @@ st.markdown("""
   }
 </script>
 """, unsafe_allow_html=True)
-st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi ", layout="centered")
 
-# CSS nền
+# Page config
+st.set_page_config(page_title="📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi", layout="centered")
+
+# CSS nền tối
 st.markdown("""
 <style>
-/* Toàn bộ nền */
 html, body, [class*="st-"], [class^="st-"] {
     background-color: #1e1e1e !important;
     color: #fdfdfd !important;
 }
-
-/* Tiêu đề lớn */
 h1, h2, h3 {
     color: #fdfdfd !important;
-    text-shadow: 1px 1px 3px black;
 }
-
-/* Label, text input, number input, radio label, checkbox label, selectbox label */
-label, .css-1cpxqw2, .css-qrbaxs, .css-1offfwp, .css-1bzt06z, .st-bb, .st-cx, .st-eb {
+label, .st-bb, .st-cx, .st-eb, .css-1cpxqw2 {
     color: #fdfdfd !important;
     font-size: 18px !important;
-    font-weight: 600 !important;
 }
-
-/* Text input & number input box nền đậm, chữ sáng */
 input, textarea {
     background-color: #333 !important;
     color: #fdfdfd !important;
-    border: 1px solid #555 !important;
 }
-
-/* Sidebar */
-.css-1d391kg, .css-hxt7ib, .css-1d3z3hw {
-    background-color: #2b2b2b !important;
-    color: #fdfdfd !important;
-}
-
-/* Button */
 .stButton>button {
     background-color: #444 !important;
     color: #fdfdfd !important;
     font-size: 18px !important;
-    border-radius: 8px !important;
-}
-
-/* Metric text */
-.css-1ht1j8u, .css-1aumxhk {
-    color: #fdfdfd !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-
-
-st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi ")
+# Tiêu đề
+st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
@@ -88,6 +63,13 @@ if username:
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
+    def log_action(action):
+        logs = data.get("logs", [])
+        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logs.append(f"{time}: {action}")
+        data["logs"] = logs
+        save_data(data)
+
     data = load_data()
     is_vip = data.get("is_vip", False)
 
@@ -99,10 +81,13 @@ if username:
         "Tính tiền lời", 
         "Tính tiền nhập hàng", 
         "Quản lý nợ", 
-        "Tính thuế", 
+        "Tính thuế (VIP)", 
         "💼 Lợi nhuận chuyến xe đầu kéo",
         "🌟 Thông tin VIP & Thanh toán",
-        "📊 Thống kê & Xuất dữ liệu"
+        "📊 Thống kê & Xuất dữ liệu (VIP)",
+        "📝 Ghi chú cá nhân (VIP)",
+        "📊 Máy tính phần trăm (VIP)",
+        "📜 Nhật ký hoạt động (VIP)"
     ]
 
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
@@ -287,6 +272,51 @@ if username:
                     st.download_button("Tải Word",f, file_name=f"{username}_data.docx")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+    elif choice == "📝 Ghi chú cá nhân (VIP)":
+        if is_vip:
+            st.subheader("📝 Ghi chú cá nhân")
+            notes = data.get("notes", [])
+            new_note = st.text_area("Thêm ghi chú mới")
+            if st.button("✅ Lưu ghi chú"):
+                if new_note.strip():
+                    notes.append(new_note.strip())
+                    data["notes"] = notes
+                    save_data(data)
+                    st.success("Đã lưu ghi chú!")
+                    log_action(f"Thêm ghi chú: {new_note.strip()}")
+            st.markdown("---")
+            if notes:
+                st.subheader("📌 Danh sách ghi chú:")
+                for i, note in enumerate(notes, 1):
+                    st.markdown(f"**{i}.** {note}")
+        else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+
+    elif choice == "📊 Máy tính phần trăm (VIP)":
+        if is_vip:
+            st.subheader("📊 Máy tính phần trăm")
+            so_goc = st.number_input("Giá trị gốc", 0.0, step=0.1)
+            phan_tram = st.number_input("Tỷ lệ phần trăm (%)", 0.0, step=0.1)
+            phep = st.radio("Chọn phép tính", ["Tăng thêm", "Giảm bớt"])
+            if st.button("✅ Tính"):
+                ket_qua = so_goc * (1 + phan_tram/100) if phep=="Tăng thêm" else so_goc * (1 - phan_tram/100)
+                st.success(f"Kết quả: {ket_qua:.2f}")
+                log_action(f"Tính phần trăm: {phep} {phan_tram}% của {so_goc} = {ket_qua}")
+        else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+
+    elif choice == "📜 Nhật ký hoạt động (VIP)":
+        if is_vip:
+            st.subheader("📜 Nhật ký hoạt động")
+            logs = data.get("logs", [])
+            if logs:
+                for log in reversed(logs[-50:]):
+                    st.markdown(f"- {log}")
+            else:
+                st.info("Chưa có hoạt động nào.")
+        else:
+            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+
 else:
     st.info("👉 Nhập tên để bắt đầu.")
 
