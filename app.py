@@ -273,24 +273,39 @@ if username:
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
     elif choice == "📝 Ghi chú cá nhân (VIP)":
-        if is_vip:
-            st.subheader("📝 Ghi chú cá nhân")
-            notes = data.get("notes", [])
-            new_note = st.text_area("Thêm ghi chú mới")
-            if st.button("✅ Lưu ghi chú"):
-                if new_note.strip():
-                    notes.append(new_note.strip())
-                    data["notes"] = notes
-                    save_data(data)
-                    st.success("Đã lưu ghi chú!")
-                    log_action(f"Thêm ghi chú: {new_note.strip()}")
-            st.markdown("---")
-            if notes:
-                st.subheader("📌 Danh sách ghi chú:")
-                for i, note in enumerate(notes, 1):
-                    st.markdown(f"**{i}.** {note}")
+    if is_vip:
+        st.subheader("📝 Ghi chú cá nhân")
+        notes = data.get("notes", [])
+        
+        new_note = st.text_area("Thêm ghi chú mới")
+        if st.button("✅ Lưu ghi chú"):
+            if new_note.strip():
+                notes.append(new_note.strip())
+                data["notes"] = notes
+                save_data(data)
+                st.success("Đã lưu ghi chú!")
+                log_action(f"Thêm ghi chú: {new_note.strip()}")
+        
+        st.markdown("---")
+        if notes:
+            st.subheader("📌 Danh sách ghi chú:")
+            for i, note in enumerate(notes):
+                col1, col2 = st.columns([8, 2])
+                with col1:
+                    st.markdown(f"**{i+1}.** {note}")
+                with col2:
+                    if st.button(f"🗑️ Xóa", key=f"xoa_note_{i}"):
+                        notes.pop(i)
+                        data["notes"] = notes
+                        save_data(data)
+                        st.success("Đã xóa ghi chú!")
+                        log_action(f"Xóa ghi chú: {note}")
+                        st.experimental_rerun()  # làm mới giao diện
         else:
-            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+            st.info("Chưa có ghi chú nào.")
+    else:
+        st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+
 
     elif choice == "📊 Máy tính phần trăm (VIP)":
         if is_vip:
