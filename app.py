@@ -307,19 +307,6 @@ if username:
         st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
 
 
-    elif choice == "📊 Máy tính phần trăm (VIP)":
-        if is_vip:
-            st.subheader("📊 Máy tính phần trăm")
-            so_goc = st.number_input("Giá trị gốc", 0.0, step=0.1)
-            phan_tram = st.number_input("Tỷ lệ phần trăm (%)", 0.0, step=0.1)
-            phep = st.radio("Chọn phép tính", ["Tăng thêm", "Giảm bớt"])
-            if st.button("✅ Tính"):
-                ket_qua = so_goc * (1 + phan_tram/100) if phep == "Tăng thêm" else so_goc * (1 - phan_tram/100)
-                st.success(f"Kết quả: {ket_qua:.2f}")
-                log_action(f"Tính phần trăm: {phep} {phan_tram}% của {so_goc} = {ket_qua}")
-        else:
-            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
-
     elif choice == "📜 Nhật ký hoạt động (VIP)":
         if is_vip:
             st.subheader("📜 Nhật ký hoạt động")
