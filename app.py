@@ -272,7 +272,7 @@ if username:
                     st.download_button("Tải Word",f, file_name=f"{username}_data.docx")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
-         elif choice == "📝 Ghi chú cá nhân (VIP)":
+     elif choice == "📝 Ghi chú cá nhân (VIP)":
         if is_vip:
             st.subheader("📝 Ghi chú cá nhân")
             notes = data.get("notes", [])
