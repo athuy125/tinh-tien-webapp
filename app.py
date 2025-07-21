@@ -273,7 +273,7 @@ if username:
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
     elif choice == "📝 Ghi chú cá nhân (VIP)":
-    if is_vip:
+      if is_vip:
         st.subheader("📝 Ghi chú cá nhân")
         notes = data.get("notes", [])
         
