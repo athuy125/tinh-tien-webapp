@@ -512,23 +512,23 @@ if username:
             for i, item in enumerate(reversed(profit_history), 1):
                 st.markdown(f"**{i}.** {item}")
 
-           idx_xoa = st.number_input(
-             "Nhập số thứ tự dòng muốn xoá",
-              min_value=1,
-              max_value=len(profit_history),
-              step=1,
-               key=f"xoa_lich_su_profit_{username}"
-           )
+            idx_xoa = st.number_input(
+                "Nhập số thứ tự dòng muốn xoá",
+                min_value=1,
+                max_value=len(profit_history),
+                step=1,
+                key=f"xoa_lich_su_profit_{username}"
+            )
 
-        if st.button("🗑️ Xoá dòng này"):
-            real_idx = len(profit_history) - idx_xoa
-            removed = profit_history.pop(real_idx)
-            history["profit"] = profit_history
-            data["history"] = history
-            save_data(data)
-            st.success(f"✅ Đã xoá: {removed}")
-    else:
-        st.info("Chưa có lịch sử tính toán nào.")
+            if st.button("🗑️ Xoá dòng này"):
+                real_idx = len(profit_history) - idx_xoa
+                removed = profit_history.pop(real_idx)
+                history["profit"] = profit_history
+                data["history"] = history
+                save_data(data)
+                st.success(f"✅ Đã xoá: {removed}")
+        else:
+            st.info("Chưa có lịch sử tính toán nào.")
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
