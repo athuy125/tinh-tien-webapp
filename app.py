@@ -10,14 +10,13 @@ from google.oauth2 import service_account
 import pytz
 from zoneinfo import ZoneInfo
 import glob
-BACKUP_FOLDER = "backups"
-os.makedirs(BACKUP_FOLDER, exist_ok=True)
+# Cấu hình
 DATA_FOLDER = "data"
-DATA_FILE = os.path.join(DATA_FOLDER, "data.json")
+BACKUP_FOLDER = "backups"
+DRIVE_FOLDER_ID = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # Thay ID của bạn
+SERVICE_ACCOUNT_FILE = "credentials.json"  # File credentials
 
-# Tạo thư mục nếu chưa có
-os.makedirs(DATA_FOLDER, exist_ok=True)
-
+os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 
 # Hàm nạp và lưu dữ liệu
@@ -60,15 +59,12 @@ def get_latest_backup():
 
 
 
+# Hàm upload lên Google Drive
 def upload_to_drive(local_file_path, drive_folder_id):
-    """Upload file lên Google Drive"""
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    SERVICE_ACCOUNT_FILE = 'credentials.json'
-
     creds = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
-
+        SERVICE_ACCOUNT_FILE,
+        scopes=['https://www.googleapis.com/auth/drive']
+    )
     service = build('drive', 'v3', credentials=creds)
 
     file_metadata = {
@@ -77,11 +73,32 @@ def upload_to_drive(local_file_path, drive_folder_id):
     }
     media = MediaFileUpload(local_file_path, resumable=True)
 
-    
+    file = service.files().create(
+        body=file_metadata,
+        media_body=media,
+        fields='id'
+    ).execute()
 
-    print(f'✅ Uploaded to Google Drive, file ID: {file.get("id")}')
-    return file.get("id")
+    print(f"📤 Uploaded to Google Drive, file ID: {file.get('id')}")
+    return file.get('id')
 
+# Hàm thực hiện cả backup và upload
+def auto_backup():
+    backup_file = backup_data_folder()
+    try:
+        upload_to_drive(backup_file, DRIVE_FOLDER_ID)
+    except Exception as e:
+        print(f"❌ Upload failed: {e}")
+
+# Đặt lịch: VD: mỗi 30 phút
+schedule.every(30).minutes.do(auto_backup)
+
+if __name__ == "__main__":
+    print("🛡 Auto backup service started...")
+    auto_backup()  # chạy ngay lần đầu
+    while True:
+        schedule.run_pending()
+        time.sleep(5)
 # PWA header (nếu muốn)
 st.markdown("""
 <link rel="manifest" href="/manifest.json">
@@ -137,7 +154,7 @@ DATA_FOLDER = 'data'
 os.makedirs(DATA_FOLDER, exist_ok=True)
 
 
-# ✅ Hàm backup dữ liệu
+# Hàm backup dữ liệu
 def backup_data_folder():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_name = f"backup_{timestamp}.zip"
@@ -148,7 +165,9 @@ def backup_data_folder():
                 filepath = os.path.join(root, file)
                 arcname = os.path.relpath(filepath, DATA_FOLDER)
                 zipf.write(filepath, arcname)
+    print(f"✅ Backup created: {backup_path}")
     return backup_path
+
 backup_file = backup_data_folder()
 if __name__ == "__main__":
     backup_file = backup_data_folder()
