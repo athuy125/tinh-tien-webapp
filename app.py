@@ -513,11 +513,11 @@ if username:
                 st.markdown(f"**{i}.** {item}")
 
            idx_xoa = st.number_input(
-                "Nhập số thứ tự dòng muốn xoá",
-                min_value=1,
-                max_value=len(profit_history),
-                step=1,
-                key=f"xoa_lich_su_profit_{username}"
+             "Nhập số thứ tự dòng muốn xoá",
+              min_value=1,
+              max_value=len(profit_history),
+              step=1,
+               key=f"xoa_lich_su_profit_{username}"
            )
 
         if st.button("🗑️ Xoá dòng này"):
