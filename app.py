@@ -137,22 +137,7 @@ def log_action(data, action):
     return data
 
 # ====== SAO LƯU & PHỤC HỒI ======
-def backup_data_folder():
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_name = f"backup_{timestamp}.zip"
-    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
 
-    with zipfile.ZipFile(backup_path, 'w') as zipf:
-        for root, dirs, files in os.walk("data"):  # thư mục dữ liệu local
-            for file in files:
-                filepath = os.path.join(root, file)
-                arcname = os.path.relpath(filepath, "data")
-                zipf.write(filepath, arcname)
-    return backup_path
-drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
-
-backup_file = backup_data_folder()
-print(f"✅ Uploaded to Google Drive, file ID: {file_id}")
 def restore_data_folder(backup_zip_path):
     with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
         zipf.extractall(DATA_FOLDER)
