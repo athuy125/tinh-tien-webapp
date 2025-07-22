@@ -100,7 +100,19 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 # ====== HÀM LOAD & SAVE ======
-
+def backup_data_folder():
+    if not os.path.exists(BACKUP_FOLDER):
+        os.makedirs(BACKUP_FOLDER)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_name = f"backup_{timestamp}.zip"
+    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
+    with zipfile.ZipFile(backup_path, 'w') as zipf:
+        for root, dirs, files in os.walk(DATA_FOLDER):
+            for file in files:
+                filepath = os.path.join(root, file)
+                arcname = os.path.relpath(filepath, DATA_FOLDER)
+                zipf.write(filepath, arcname)
+    return backup_path
 def add_history(data, section, info):
     """
     Lưu lại lịch sử tính toán.
