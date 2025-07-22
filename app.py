@@ -87,6 +87,19 @@ def upload_to_drive(local_file_path, drive_folder_id):
 
     print(f"📤 Uploaded to Google Drive, file ID: {file.get('id')}")
     return file.get('id')
+# Hàm backup dữ liệu
+def backup_data_folder():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_name = f"backup_{timestamp}.zip"
+    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
+    with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(DATA_FOLDER):
+            for file in files:
+                filepath = os.path.join(root, file)
+                arcname = os.path.relpath(filepath, DATA_FOLDER)
+                zipf.write(filepath, arcname)
+    print(f"✅ Backup created: {backup_path}")
+    return backup_path
 
 # Hàm thực hiện cả backup và upload
 def auto_backup():
@@ -160,19 +173,6 @@ DATA_FOLDER = 'data'
 os.makedirs(DATA_FOLDER, exist_ok=True)
 
 
-# Hàm backup dữ liệu
-def backup_data_folder():
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_name = f"backup_{timestamp}.zip"
-    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
-    with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, dirs, files in os.walk(DATA_FOLDER):
-            for file in files:
-                filepath = os.path.join(root, file)
-                arcname = os.path.relpath(filepath, DATA_FOLDER)
-                zipf.write(filepath, arcname)
-    print(f"✅ Backup created: {backup_path}")
-    return backup_path
 
 backup_file = backup_data_folder()
 if __name__ == "__main__":
