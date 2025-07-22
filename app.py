@@ -8,7 +8,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2 import service_account
 import pytz
-
+from zoneinfo import ZoneInfo
 
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
