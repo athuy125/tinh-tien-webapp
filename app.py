@@ -101,18 +101,28 @@ os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 # ====== HÀM LOAD & SAVE ======
 def backup_data_folder():
-    if not os.path.exists(BACKUP_FOLDER):
-        os.makedirs(BACKUP_FOLDER)
+    # Tạo thư mục backup nếu chưa có
+    os.makedirs(BACKUP_FOLDER, exist_ok=True)
+
+    # Tên file backup theo dạng backup_YYYYMMDD_HHMMSS.zip
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_name = f"backup_{timestamp}.zip"
     backup_path = os.path.join(BACKUP_FOLDER, backup_name)
-    with zipfile.ZipFile(backup_path, 'w') as zipf:
+
+    # Nén toàn bộ thư mục DATA_FOLDER vào file .zip
+    with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for root, dirs, files in os.walk(DATA_FOLDER):
             for file in files:
                 filepath = os.path.join(root, file)
+                # Ghi vào zip với đường dẫn tương đối, để khi giải nén vẫn giữ cấu trúc thư mục
                 arcname = os.path.relpath(filepath, DATA_FOLDER)
                 zipf.write(filepath, arcname)
+
+    print(f"✅ Backup thành công: {backup_path}")
     return backup_path
+if __name__ == "__main__":
+    backup_file = backup_data_folder()
+    print(f"Đã tạo file backup: {backup_file}")
 def add_history(data, section, info):
     """
     Lưu lại lịch sử tính toán.
