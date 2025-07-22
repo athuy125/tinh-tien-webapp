@@ -478,16 +478,16 @@ if username:
                 restore_data_folder(tmp_path)
                 st.success("✅ Đã phục hồi dữ liệu thành công!")
     elif choice == "📜 Lịch sử tính toán":
-    st.subheader("📜 Lịch sử tính toán")
-    history = data.get("history", {})
-    tab = st.radio("Chọn loại", ["Tính lợi nhuận", "Tiền nhập hàng"])
-    key = "profit" if tab == "Tính lợi nhuận" else "import"
-    logs = history.get(key, [])
-    if logs:
-        for log in reversed(logs[-100:]):
-            st.markdown(f"- {log}")
-    else:
-        st.info("Chưa có lịch sử.")
+        st.subheader("📜 Lịch sử tính toán")
+        history = data.get("history", {})
+        tab = st.radio("Chọn loại", ["Tính lợi nhuận", "Tiền nhập hàng"])
+        key = "profit" if tab == "Tính lợi nhuận" else "import"
+        logs = history.get(key, [])
+        if logs:
+            for log in reversed(logs[-100:]):
+                st.markdown(f"- {log}")
+        else:
+            st.info("Chưa có lịch sử.")
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
