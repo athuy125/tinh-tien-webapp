@@ -4,6 +4,30 @@ import json
 import zipfile
 from datetime import datetime
 from docx import Document
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+from google.oauth2 import service_account
+
+def upload_to_drive(local_file_path, drive_folder_id):
+    """Upload file lên Google Drive"""
+    SCOPES = ['https://www.googleapis.com/auth/drive.file']
+    SERVICE_ACCOUNT_FILE = 'credentials.json'
+
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+    service = build('drive', 'v3', credentials=creds)
+
+    file_metadata = {
+        'name': os.path.basename(local_file_path),
+        'parents': [drive_folder_id]
+    }
+    media = MediaFileUpload(local_file_path, resumable=True)
+
+    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+    print(f'✅ Uploaded to Google Drive, file ID: {file.get("id")}')
+    return file.get("id")
 
 # PWA header (nếu muốn)
 st.markdown("""
@@ -100,6 +124,17 @@ def restore_data_folder(backup_zip_path):
     with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
         zipf.extractall(DATA_FOLDER)
     return True
+if st.button("🛡 Sao lưu & Upload lên Google Drive"):
+    backup_file = backup_data_folder()
+    st.success(f"✅ Đã sao lưu tại: {backup_file}")
+
+    # Upload lên Google Drive
+    drive_folder_id = "FOLDER_ID"  # Thay bằng ID thư mục Drive của bạn
+    try:
+        file_id = upload_to_drive(backup_file, drive_folder_id)
+        st.success(f"📤 Đã upload lên Google Drive, file ID: {file_id}")
+    except Exception as e:
+        st.error(f"❌ Upload thất bại: {e}")
 if username:
     filename = f"data_{username}.json"
 
