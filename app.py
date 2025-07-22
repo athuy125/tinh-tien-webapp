@@ -491,29 +491,28 @@ if username:
             st.success(f"✅ Đã sao lưu: {backup_file}")
 
             # Thêm nút backup và upload lên Google Drive
-        if st.button("🛡 Sao lưu & Upload lên Google Drive"):
-            
+        if st.button("🛡 Sao lưu & Upload lên Google Drive", key="backup_upload_drive"):
             backup_file = backup_data_folder()
             st.success(f"✅ Đã sao lưu tại: {backup_file}")
 
-                # Upload lên Google Drive
-            drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # Thay bằng ID thư mục Drive thật của bạn
+            # Upload lên Google Drive
+            drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
         try:
             file_id = upload_to_drive(backup_file, drive_folder_id)
             st.success(f"📤 Đã upload lên Google Drive, file ID: {file_id}")
         except Exception as e:
             st.error(f"❌ Upload thất bại: {e}")
-
-        st.markdown("---")
-        st.subheader("♻️ Phục hồi dữ liệu")
-        uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
-        if uploaded is not None:
-            if st.button("♻️ Phục hồi"):
-                tmp_path = 'temp_restore.zip'
-            with open(tmp_path, 'wb') as f:
-                f.write(uploaded.getbuffer())
-                restore_data_folder(tmp_path)
-                st.success("✅ Đã phục hồi dữ liệu thành công!")
+    
+            st.markdown("---")
+            st.subheader("♻️ Phục hồi dữ liệu")
+            uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
+            if uploaded is not None:
+                if st.button("♻️ Phục hồi"):
+                    tmp_path = 'temp_restore.zip'
+                with open(tmp_path, 'wb') as f:
+                    f.write(uploaded.getbuffer())
+                    restore_data_folder(tmp_path)
+                    st.success("✅ Đã phục hồi dữ liệu thành công!")
     elif choice == "📜 Lịch sử tính toán":
         st.subheader("📜 Lịch sử tính toán")
         
