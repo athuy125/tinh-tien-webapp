@@ -524,26 +524,26 @@ if username:
         reverse=True
         )
 
-           if backup_files:
-                for backup_file in backup_files:
-                    col1, col2, col3 = st.columns([4, 2, 2])
-                with col1:
-                    st.write(f"📦 {os.path.basename(backup_file)}")
-                with col2:
-                    with open(backup_file, 'rb') as f:
-                        st.download_button(
-                        label="📥 Tải",
-                        data=f,
-                        file_name=os.path.basename(backup_file),
-                        mime="application/zip",
-                        key=f"download_{os.path.basename(backup_file)}"
+        if backup_files:
+            for backup_file in backup_files:
+                col1, col2, col3 = st.columns([4, 2, 2])
+            with col1:
+                st.write(f"📦 {os.path.basename(backup_file)}")
+            with col2:
+                with open(backup_file, 'rb') as f:
+                    st.download_button(
+                    label="📥 Tải",
+                    data=f,
+                    file_name=os.path.basename(backup_file),
+                    mime="application/zip",
+                    key=f"download_{os.path.basename(backup_file)}"
                     )
-                with col3:
-                    if st.button("🗑 Xoá", key=f"xoa_{os.path.basename(backup_file)}"):
-                        os.remove(backup_file)
-                        st.success(f"✅ Đã xoá {os.path.basename(backup_file)}")
-                        st.experimental_rerun()  # load lại giao diện sau khi xoá
-           else:
+            with col3:
+                if st.button("🗑 Xoá", key=f"xoa_{os.path.basename(backup_file)}"):
+                    os.remove(backup_file)
+                    st.success(f"✅ Đã xoá {os.path.basename(backup_file)}")
+                    st.experimental_rerun()  # load lại giao diện sau khi xoá
+        else:
                 st.info("⚠️ Hiện chưa có file backup nào.")
     elif choice == "📜 Lịch sử tính toán":
         st.subheader("📜 Lịch sử tính toán")
