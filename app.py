@@ -16,10 +16,11 @@ def get_latest_backup():
         backups.sort(reverse=True)
         return os.path.join(BACKUP_FOLDER, backups[0])
     return None
+BACKUP_FOLDER = "backups"
 backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
 
 DATA_FOLDER = "data"
-BACKUP_FOLDER = "backups"
+
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
@@ -139,13 +140,19 @@ def backup_data_folder():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_name = f"backup_{timestamp}.zip"
     backup_path = os.path.join(BACKUP_FOLDER, backup_name)
+
     with zipfile.ZipFile(backup_path, 'w') as zipf:
-        for root, dirs, files in os.walk(DATA_FOLDER):
+        for root, dirs, files in os.walk("data"):  # thư mục dữ liệu local
             for file in files:
                 filepath = os.path.join(root, file)
-                arcname = os.path.relpath(filepath, DATA_FOLDER)
+                arcname = os.path.relpath(filepath, "data")
                 zipf.write(filepath, arcname)
     return backup_path
+drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
+
+backup_file = backup_data_folder()
+file_id = upload_to_drive(backup_file, drive_folder_id)
+print(f"✅ Uploaded to Google Drive, file ID: {file_id}")
 def restore_data_folder(backup_zip_path):
     with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
         zipf.extractall(DATA_FOLDER)
