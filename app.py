@@ -152,13 +152,17 @@ if st.button("🛡 Sao lưu & Upload lên Google Drive"):
     except Exception as e:
         st.error(f"❌ Upload thất bại: {e}")
 def parse_sl(text):
+    """
+    Chấp nhận các biểu thức như: 11+5, 11*2, 10/2, 20-3
+    """
     try:
-        text = text.replace(',', '.')
-        if '+' in text:
-            parts = text.split('+')
-            return sum(float(p.strip()) for p in parts)
+        text = text.replace(',', '.')  # đổi , thành .
+        # Chỉ cho phép số và +-*/. và khoảng trắng
+        allowed = "0123456789+-*/.() "
+        if all(c in allowed for c in text):
+            return eval(text)
         else:
-            return float(text.strip())
+            return 0
     except:
         return 0
 if username:
@@ -231,6 +235,9 @@ if username:
             st.info(f"👉 Tổng số lượng bán: **{sl_ban}**")
             st.info(f"👉 Tiền bán: **{tien_ban} nghìn đồng**")
             st.success(f"✅ Tiền lời: **{tien_loi} nghìn đồng**")
+            st.info(f"✅ Số lượng thu đã nhập: {sl_thu}")
+            st.info(f"✅ Số lượng bán đã nhập: {sl_ban}")
+
 
             # Lưu lịch sử
             if ten_hang.strip():
