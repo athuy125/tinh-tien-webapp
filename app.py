@@ -10,7 +10,9 @@ from google.oauth2 import service_account
 import pytz
 from zoneinfo import ZoneInfo
 import glob
-
+DATA_FOLDER = "data"
+BACKUP_FOLDER = "backups"
+os.makedirs(BACKUP_FOLDER, exist_ok=True)
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
     SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -491,39 +493,26 @@ if username:
         if st.button("🛡 Sao lưu toàn bộ dữ liệu"):
             backup_file = backup_data_folder()
             st.success(f"✅ Đã sao lưu: {backup_file}")
-
-            # Thêm nút backup và upload lên Google Drive
-        if st.button("🛡 Sao lưu & Upload lên Google Drive", key="backup_upload_drive"):
-            backup_file = backup_data_folder()
-            st.success(f"✅ Đã sao lưu tại: {backup_file}")
-
-            # Upload lên Google Drive
-            drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
-        try:
-            file_id = upload_to_drive(backup_file, drive_folder_id)
-            st.success(f"📤 Đã upload lên Google Drive, file ID: {file_id}")
-        except Exception as e:
-            st.error(f"❌ Upload thất bại: {e}")
     
-            st.markdown("---")
-            st.subheader("♻️ Phục hồi dữ liệu")
-            uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
-            if uploaded is not None:
-                if st.button("♻️ Phục hồi"):
-                    tmp_path = 'temp_restore.zip'
-                with open(tmp_path, 'wb') as f:
-                    f.write(uploaded.getbuffer())
-                    restore_data_folder(tmp_path)
-                    st.success("✅ Đã phục hồi dữ liệu thành công!")
-        st.markdown("---")
-        st.subheader("📂 Quản lý file backup")
+        # 📥 Nút tải file backup mới nhất
+        latest_backup = get_latest_backup()
+        if latest_backup:
+            with open(latest_backup, "rb") as f:
+                st.download_button(
+                label="📥 Tải file backup mới nhất",
+                data=f,
+                file_name=os.path.basename(latest_backup),
+                mime='application/zip'
+                )
+       else:
+            st.info("Chưa có file backup nào để tải.")
 
-        # Lấy danh sách file backup (mới -> cũ)
-        backup_files = sorted(
-        glob.glob('backups/*.zip'),
-        key=os.path.getctime,
-        reverse=True
-        )
+            # Lấy danh sách file backup (mới -> cũ)
+            backup_files = sorted(
+            glob.glob('backups/*.zip'),
+            key=os.path.getctime,
+            reverse=True
+            )
 
         if backup_files:
             for backup_file in backup_files:
