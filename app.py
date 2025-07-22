@@ -7,6 +7,10 @@ from docx import Document
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2 import service_account
+import pytz
+
+vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+time = datetime.now(vn_tz).strftime("%Y-%m-%d %H:%M:%S")
 
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
@@ -92,7 +96,7 @@ def add_history(data, section, info):
     section: "profit" hoặc "import"
     info: chuỗi mô tả
     """
-    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    time = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime("%Y-%m-%d %H:%M:%S")
     history = data.get("history", {})
     if section not in history:
         history[section] = []
