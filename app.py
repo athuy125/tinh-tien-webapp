@@ -20,7 +20,7 @@ BACKUP_FOLDER = "backups"
 backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
 
 DATA_FOLDER = "data"
-
+datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
