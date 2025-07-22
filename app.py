@@ -29,7 +29,7 @@ def upload_to_drive(local_file_path, drive_folder_id):
     file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
     print(f'✅ Uploaded to Google Drive, file ID: {file.get("id")}')
-    return file.get("id"
+    return file.get("id")
 
 # PWA header (nếu muốn)
 st.markdown("""
