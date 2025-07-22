@@ -235,8 +235,7 @@ if username:
             st.info(f"👉 Tổng số lượng bán: **{sl_ban}**")
             st.info(f"👉 Tiền bán: **{tien_ban} nghìn đồng**")
             st.success(f"✅ Tiền lời: **{tien_loi} nghìn đồng**")
-            st.info(f"✅ Số lượng thu đã nhập: {sl_thu}")
-            st.info(f"✅ Số lượng bán đã nhập: {sl_ban}")
+            
 
 
             # Lưu lịch sử
