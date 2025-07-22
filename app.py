@@ -9,8 +9,6 @@ from googleapiclient.http import MediaFileUpload
 from google.oauth2 import service_account
 import pytz
 
-vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
-time = datetime.now(vn_tz).strftime("%Y-%m-%d %H:%M:%S")
 
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
