@@ -130,7 +130,7 @@ if username:
     # Quản lý nợ
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
-        list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount"]}
+        list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount","logs","notes"]}
         if list_no:
             ten = st.selectbox("👉 Chọn người nợ:", list(list_no.keys()))
             if ten:
@@ -291,20 +291,19 @@ if username:
                 st.subheader("📌 Danh sách ghi chú:")
                 for i, note in enumerate(notes, 1):
                     st.markdown(f"**{i}.** {note}")
-                xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", 0, step=1)
+                idx_xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", min_value=1, max_value=len(notes), step=1)
                 if st.button("🗑️ Xóa ghi chú"):
-                    if 1 <= xoa <= len(notes):
-                        removed = notes.pop(xoa-1)
+                    if 1 <= idx_xoa <= len(notes):
+                        removed = notes.pop(idx_xoa-1)
                         data["notes"] = notes
                         save_data(data)
-                        st.success(f"Đã xóa ghi chú: {removed}")
+                        st.success(f"Đã xóa: {removed}")
                         log_action(f"Xóa ghi chú: {removed}")
-                    else:
-                        st.warning("⚠️ Số thứ tự không hợp lệ!")
             else:
                 st.info("Chưa có ghi chú nào.")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+
     # Máy tính phần trăm (VIP)
     elif choice == "📊 Máy tính phần trăm (VIP)":
         if is_vip:
@@ -325,7 +324,7 @@ if username:
             st.subheader("📜 Nhật ký hoạt động")
             logs = data.get("logs", [])
             if logs:
-                for log in reversed(logs[-100:]):  # hiển thị tối đa 100 log mới nhất
+                for log in reversed(logs[-50:]):
                     st.markdown(f"- {log}")
             else:
                 st.info("Chưa có hoạt động nào.")
