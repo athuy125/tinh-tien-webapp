@@ -199,10 +199,11 @@ if username:
     if choice == "Tính lời + vốn (gộp)":
         st.subheader("💰 Tính lời + vốn (gộp)")
         ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải...)")
-        sl_ban = st.number_input("Số lượng bán", 0, step=1)
-        gia_ban = st.number_input("Giá bán / đơn vị (nghìn đồng)", 0, step=1)
         sl_thu = st.number_input("Số lượng thu (nhập)", 0, step=1)
         gia_thu = st.number_input("Giá thu / đơn vị (nghìn đồng)", 0, step=1)
+        sl_ban = st.number_input("Số lượng bán", 0, step=1)
+        gia_ban = st.number_input("Giá bán / đơn vị (nghìn đồng)", 0, step=1)
+        
 
         if st.button("✅ Tính"):
             tien_von = sl_thu * gia_thu
