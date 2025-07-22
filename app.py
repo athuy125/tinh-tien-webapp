@@ -558,12 +558,15 @@ if username:
         st.subheader("♻️ Phục hồi dữ liệu từ file backup")
         uploaded = st.file_uploader("📤 Tải lên file backup (.zip)", type=['zip'])
         if uploaded is not None:
-            if st.button("♻️ Phục hồi dữ liệu"):
-                tmp_path = "temp_restore.zip"
+            tmp_path = "temp_restore.zip"
             with open(tmp_path, 'wb') as f:
                 f.write(uploaded.getbuffer())
-            restore_data_folder(tmp_path)
-            st.success("✅ Đã phục hồi dữ liệu thành công! (Bạn có thể tải lại trang để xem)")
+            if st.button("♻️ Phục hồi dữ liệu"):
+                try:
+                    restore_data_folder(tmp_path)
+                    st.success("✅ Đã phục hồi dữ liệu thành công! (Bạn có thể tải lại trang để xem)")
+                except Exception as e:
+                    st.error(f"❌ Phục hồi thất bại: {e}")
     elif choice == "📜 Lịch sử tính toán":
         st.subheader("📜 Lịch sử tính toán")
         
