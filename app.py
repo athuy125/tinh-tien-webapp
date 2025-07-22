@@ -85,6 +85,7 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 # ====== HÀM LOAD & SAVE ======
+
 def add_history(data, section, info):
     """
     Lưu lại lịch sử tính toán.
@@ -233,7 +234,8 @@ if username:
     # Quản lý nợ
     elif choice == "Quản lý nợ":
         st.subheader("📝 Quản lý danh sách nợ")
-        list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount","logs","notes"]}
+        list_no = {k:v for k,v in data.items() if k not in ["is_vip","vip_amount","logs","notes","history"]}
+
         if list_no:
             ten = st.selectbox("👉 Chọn người nợ:", list(list_no.keys()))
             if ten:
