@@ -1,8 +1,9 @@
 import streamlit as st
 import os
 import json
-from docx import Document
+import zipfile
 from datetime import datetime
+from docx import Document
 
 # PWA header (nếu muốn)
 st.markdown("""
@@ -72,9 +73,58 @@ if username:
 
     data = load_data()
     is_vip = data.get("is_vip", False)
+# ====== CẤU HÌNH ======
+DATA_FOLDER = 'data'
+BACKUP_FOLDER = 'backup'
+
+# Tạo thư mục nếu chưa có
+os.makedirs(DATA_FOLDER, exist_ok=True)
+os.makedirs(BACKUP_FOLDER, exist_ok=True)
+
+# ====== HÀM LOAD & SAVE ======
+def get_filename(username):
+    return os.path.join(DATA_FOLDER, f"data_{username}.json")
+
+def load_data(username):
+    filepath = get_filename(username)
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def save_data(username, data):
+    filepath = get_filename(username)
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+def log_action(data, action):
+    logs = data.get("logs", [])
+    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    logs.append(f"{time}: {action}")
+    data["logs"] = logs
+    return data
+
+# ====== SAO LƯU & PHỤC HỒI ======
+def backup_data_folder():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_name = f"backup_{timestamp}.zip"
+    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
+    with zipfile.ZipFile(backup_path, 'w') as zipf:
+        for root, dirs, files in os.walk(DATA_FOLDER):
+            for file in files:
+                filepath = os.path.join(root, file)
+                arcname = os.path.relpath(filepath, DATA_FOLDER)
+                zipf.write(filepath, arcname)
+    return backup_path
+
+def restore_data_folder(backup_zip_path):
+    with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
+        zipf.extractall(DATA_FOLDER)
+    return True
 
     if is_vip:
         st.success(f"🌟 {username}, bạn đang là THÀNH VIÊN VIP! 🌟")
+    
 
     # Menu
     menu = [
@@ -87,7 +137,8 @@ if username:
         "📊 Thống kê & Xuất dữ liệu (VIP)",
         "📝 Ghi chú cá nhân (VIP)",
         "📊 Máy tính phần trăm (VIP)",
-        "📜 Nhật ký hoạt động (VIP)"
+        "📜 Nhật ký hoạt động (VIP)
+        "🛡 Sao lưu & Phục hồi dữ liệu"
     ]
 
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
@@ -330,6 +381,23 @@ if username:
                 st.info("Chưa có hoạt động nào.")
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
+    elif choice == "🛡 Sao lưu & Phục hồi dữ liệu":
+        st.subheader("📦 Tạo file backup")
+        if st.button("🛡 Sao lưu toàn bộ dữ liệu"):
+            backup_file = backup_data_folder()
+            st.success(f"✅ Đã sao lưu: {backup_file}")
+
+        st.markdown("---")
+        st.subheader("♻️ Phục hồi dữ liệu")
+        uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
+        if uploaded is not None:
+            if st.button("♻️ Phục hồi"):
+                tmp_path = 'temp_restore.zip'
+                with open(tmp_path, 'wb') as f:
+                    f.write(uploaded.getbuffer())
+                restore_data_folder(tmp_path)
+                st.success("✅ Đã phục hồi dữ liệu thành công!")
+
 else:
     st.info("👉 Nhập tên để bắt đầu.")
 
