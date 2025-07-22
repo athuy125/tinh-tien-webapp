@@ -378,35 +378,53 @@ if username:
 
     # Ghi chú cá nhân (VIP)
     elif choice == "📝 Ghi chú cá nhân (VIP)":
-        if is_vip:
-            st.subheader("📝 Ghi chú cá nhân")
-            notes = data.get("notes", [])
-            new_note = st.text_area("Thêm ghi chú mới")
-            if st.button("✅ Lưu ghi chú"):
-                if new_note.strip():
-                    notes.append(new_note.strip())
+    if is_vip:
+        st.subheader("📝 Ghi chú cá nhân")
+        # Lấy notes an toàn
+        notes = data.get("notes", [])
+        if not isinstance(notes, list):
+            notes = []
+            data["notes"] = notes
+            save_data(data)
+
+        new_note = st.text_area("Thêm ghi chú mới")
+
+        if st.button("✅ Lưu ghi chú"):
+            if new_note.strip():
+                notes.append(new_note.strip())
+                data["notes"] = notes
+                save_data(data)
+                st.success("Đã lưu ghi chú!")
+                # Thêm log
+                logs = data.get("logs", [])
+                time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logs.append(f"{time}: Thêm ghi chú: {new_note.strip()}")
+                data["logs"] = logs
+                save_data(data)
+
+        st.markdown("---")
+
+        if notes:
+            st.subheader("📌 Danh sách ghi chú:")
+            for i, note in enumerate(notes, 1):
+                st.markdown(f"**{i}.** {note}")
+            idx_xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", min_value=1, max_value=len(notes), step=1)
+            if st.button("🗑️ Xóa ghi chú"):
+                if 1 <= idx_xoa <= len(notes):
+                    removed = notes.pop(idx_xoa-1)
                     data["notes"] = notes
                     save_data(data)
-                    st.success("Đã lưu ghi chú!")
-                    log_action(f"Thêm ghi chú: {new_note.strip()}")
-            st.markdown("---")
-            if notes:
-                st.subheader("📌 Danh sách ghi chú:")
-                for i, note in enumerate(notes, 1):
-                    st.markdown(f"**{i}.** {note}")
-                idx_xoa = st.number_input("Nhập số thứ tự ghi chú muốn xóa", min_value=1, max_value=len(notes), step=1)
-                if st.button("🗑️ Xóa ghi chú"):
-                    if 1 <= idx_xoa <= len(notes):
-                        removed = notes.pop(idx_xoa-1)
-                        data["notes"] = notes
-                        save_data(data)
-                        st.success(f"Đã xóa: {removed}")
-                        log_action(f"Xóa ghi chú: {removed}")
-            else:
-                st.info("Chưa có ghi chú nào.")
+                    # Thêm log
+                    logs = data.get("logs", [])
+                    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    logs.append(f"{time}: Xóa ghi chú: {removed}")
+                    data["logs"] = logs
+                    save_data(data)
+                    st.success(f"Đã xóa: {removed}")
         else:
-            st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
-
+            st.info("Chưa có ghi chú nào.")
+    else:
+        st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
     # Máy tính phần trăm (VIP)
     elif choice == "📊 Máy tính phần trăm (VIP)":
         if is_vip:
