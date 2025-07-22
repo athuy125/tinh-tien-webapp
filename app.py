@@ -39,7 +39,7 @@ def upload_to_drive(local_file_path, drive_folder_id):
     }
     media = MediaFileUpload(local_file_path, resumable=True)
 
-    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    
 
     print(f'✅ Uploaded to Google Drive, file ID: {file.get("id")}')
     return file.get("id")
@@ -152,7 +152,6 @@ def backup_data_folder():
 drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
 
 backup_file = backup_data_folder()
-file_id = upload_to_drive(backup_file, drive_folder_id)
 print(f"✅ Uploaded to Google Drive, file ID: {file_id}")
 def restore_data_folder(backup_zip_path):
     with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
