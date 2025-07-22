@@ -149,6 +149,16 @@ if st.button("🛡 Sao lưu & Upload lên Google Drive"):
         st.success(f"📤 Đã upload lên Google Drive, file ID: {file_id}")
     except Exception as e:
         st.error(f"❌ Upload thất bại: {e}")
+def parse_sl(text):
+    try:
+        text = text.replace(',', '.')
+        if '+' in text:
+            parts = text.split('+')
+            return sum(float(p.strip()) for p in parts)
+        else:
+            return float(text.strip())
+    except:
+        return 0
 if username:
     filename = f"data_{username}.json"
 
@@ -171,16 +181,7 @@ if username:
 
     data = load_data()
     is_vip = data.get("is_vip", False)
-def parse_sl(text):
-    try:
-        text = text.replace(',', '.')
-        if '+' in text:
-            parts = text.split('+')
-            return sum(float(p.strip()) for p in parts)
-        else:
-            return float(text.strip())
-    except:
-        return 0
+
 
 
     if is_vip:
