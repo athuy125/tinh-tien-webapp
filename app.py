@@ -209,9 +209,9 @@ if username:
                 text = text.replace(',', '.')
                 if '+' in text:
                     parts = text.split('+')
-                return sum(float(p.strip()) for p in parts)
-            else:
-                return float(text.strip())
+                    return sum(float(p.strip()) for p in parts)
+                else:
+                    return float(text.strip())
         except:
             return 0
         
