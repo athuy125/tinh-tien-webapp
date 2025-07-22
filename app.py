@@ -104,19 +104,16 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 
 # ====== HÀM LOAD & SAVE ======
 def backup_data_folder():
-    """Backup toàn bộ thư mục DATA_FOLDER thành file zip."""
+    """Tạo file backup .zip từ thư mục DATA_FOLDER"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_name = f"backup_{timestamp}.zip"
     backup_path = os.path.join(BACKUP_FOLDER, backup_name)
-
     with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for root, dirs, files in os.walk(DATA_FOLDER):
             for file in files:
                 filepath = os.path.join(root, file)
-                # Ghi đường dẫn tương đối để khi giải nén sẽ đúng cấu trúc
                 arcname = os.path.relpath(filepath, DATA_FOLDER)
                 zipf.write(filepath, arcname)
-    print(f"✅ Đã backup thành công: {backup_path}")
     return backup_path
 backup_file = backup_data_folder()
 if __name__ == "__main__":
