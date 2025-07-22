@@ -51,28 +51,7 @@ st.title("📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi")
 
 username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
-if username:
-    filename = f"data_{username}.json"
 
-    def load_data():
-        if os.path.exists(filename):
-            with open(filename, "r", encoding="utf-8") as f:
-                return json.load(f)
-        return {}
-
-    def save_data(data):
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-
-    def log_action(action):
-        logs = data.get("logs", [])
-        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        logs.append(f"{time}: {action}")
-        data["logs"] = logs
-        save_data(data)
-
-    data = load_data()
-    is_vip = data.get("is_vip", False)
 # ====== CẤU HÌNH ======
 DATA_FOLDER = 'data'
 BACKUP_FOLDER = 'backup'
@@ -121,6 +100,28 @@ def restore_data_folder(backup_zip_path):
     with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
         zipf.extractall(DATA_FOLDER)
     return True
+if username:
+    filename = f"data_{username}.json"
+
+    def load_data():
+        if os.path.exists(filename):
+            with open(filename, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {}
+
+    def save_data(data):
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+    def log_action(action):
+        logs = data.get("logs", [])
+        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logs.append(f"{time}: {action}")
+        data["logs"] = logs
+        save_data(data)
+
+    data = load_data()
+    is_vip = data.get("is_vip", False)
 
     if is_vip:
         st.success(f"🌟 {username}, bạn đang là THÀNH VIÊN VIP! 🌟")
