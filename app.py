@@ -503,15 +503,33 @@ if username:
                 st.success("✅ Đã phục hồi dữ liệu thành công!")
     elif choice == "📜 Lịch sử tính toán":
         st.subheader("📜 Lịch sử tính toán")
+    
         history = data.get("history", {})
-        tab = st.radio("Chọn loại", ["Tính lợi nhuận", "Tiền nhập hàng"])
-        key = "profit" if tab == "Tính lợi nhuận" else "import"
-        logs = history.get(key, [])
-        if logs:
-            for log in reversed(logs[-100:]):
-                st.markdown(f"- {log}")
-        else:
-            st.info("Chưa có lịch sử.")
+        profit_history = history.get("profit", [])
+
+        if profit_history:
+            st.markdown("### 📌 Danh sách lịch sử:")
+            for i, item in enumerate(reversed(profit_history), 1):
+                st.markdown(f"**{i}.** {item}")
+
+                # Số thứ tự muốn xoá
+                idx_xoa = st.number_input(
+                "Nhập số thứ tự dòng muốn xoá", 
+                min_value=1, 
+                max_value=len(profit_history), 
+                step=1
+            )
+
+            if st.button("🗑️ Xoá dòng này"):
+                # Do đã reversed nên cần tính chỉ số gốc
+                real_idx = len(profit_history) - idx_xoa
+                removed = profit_history.pop(real_idx)
+                history["profit"] = profit_history
+                data["history"] = history
+                save_data(data)
+                st.success(f"✅ Đã xoá: {removed}")
+    else:
+        st.info("Chưa có lịch sử tính toán nào.")
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
