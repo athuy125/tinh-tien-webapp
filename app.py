@@ -137,8 +137,8 @@ def restore_data_folder(backup_zip_path):
         "📊 Thống kê & Xuất dữ liệu (VIP)",
         "📝 Ghi chú cá nhân (VIP)",
         "📊 Máy tính phần trăm (VIP)",
-        "📜 Nhật ký hoạt động (VIP)
-        "🛡 Sao lưu & Phục hồi dữ liệu"
+        "📜 Nhật ký hoạt động (VIP)",
+        "🛡 Sao lưu & Phục hồi dữ liệu",
     ]
 
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
