@@ -378,16 +378,16 @@ if username:
 
     # Ghi chú cá nhân (VIP)
     elif choice == "📝 Ghi chú cá nhân (VIP)":
-    if is_vip:
-        st.subheader("📝 Ghi chú cá nhân")
-        # Lấy notes an toàn
-        notes = data.get("notes", [])
-        if not isinstance(notes, list):
-            notes = []
-            data["notes"] = notes
-            save_data(data)
+        if is_vip:
+            st.subheader("📝 Ghi chú cá nhân")
+            # Lấy notes an toàn
+            notes = data.get("notes", [])
+            if not isinstance(notes, list):
+                notes = []
+                data["notes"] = notes
+                save_data(data)
 
-        new_note = st.text_area("Thêm ghi chú mới")
+            new_note = st.text_area("Thêm ghi chú mới")
 
         if st.button("✅ Lưu ghi chú"):
             if new_note.strip():
