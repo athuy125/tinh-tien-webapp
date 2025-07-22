@@ -178,8 +178,7 @@ if username:
 
     # Menu
     menu = [
-        "Tính tiền lời", 
-        "Tính tiền nhập hàng", 
+        "Tính lời + vốn (gộp)", 
         "Quản lý nợ", 
         "Tính thuế (VIP)", 
         "💼 Lợi nhuận chuyến xe đầu kéo",
@@ -197,32 +196,31 @@ if username:
     st.markdown("<hr style='margin:20px 0'>", unsafe_allow_html=True)
 
     # Tính tiền lời
-    if choice == "Tính tiền lời":
-        st.subheader("💰 Tính tiền lời khi bán hàng")
-        ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải, bánh...)")
-        sl = st.number_input("Số lượng bán", 0, step=1)
-        gia_ban = st.number_input("Giá bán / số lượng (nghìn đồng)", 0, step=1)
-        gia_von = st.number_input("Giá vốn / số lượng (nghìn đồng)", 0, step=1)
-        if st.button("✅ Tính lợi nhuận"):
-            loi = (gia_ban - gia_von) * sl
-            st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
+    elif choice == "Tính lời + vốn (gộp)":
+        st.subheader("💰 Tính lời + vốn (gộp)")
+        ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải...)")
+        sl_ban = st.number_input("Số lượng bán", 0, step=1)
+        gia_ban = st.number_input("Giá bán / đơn vị (nghìn đồng)", 0, step=1)
+        sl_thu = st.number_input("Số lượng thu (nhập)", 0, step=1)
+        gia_thu = st.number_input("Giá thu / đơn vị (nghìn đồng)", 0, step=1)
+
+        if st.button("✅ Tính"):
+            tien_von = sl_thu * gia_thu
+            tien_ban = sl_ban * gia_ban
+            tien_loi = tien_ban - tien_von
+
+            st.info(f"👉 Tiền vốn (nhập): **{tien_von} nghìn đồng**")
+            st.info(f"👉 Tiền bán: **{tien_ban} nghìn đồng**")
+            st.success(f"✅ Tiền lời: **{tien_loi} nghìn đồng**")
+
+            # Ghi vào lịch sử
             if ten_hang.strip():
-                add_history(data, "profit", f"Đã bán {sl} {ten_hang}, giá bán {gia_ban}, giá vốn {gia_von}, lời {loi} nghìn đồng")
+                noi_dung = f"{ten_hang}: nhập {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
             else:
-                add_history(data, "profit", f"Bán {sl} × ({gia_ban}-{gia_von}) = {loi} nghìn đồng")
-    # Tính tiền nhập hàng
-    elif choice == "Tính tiền nhập hàng":
-        st.subheader("📦 Tính tiền cần trả khi nhập hàng")
-        ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải, bánh...)")
-        sl = st.number_input("Số lượng nhập", 0, step=1)
-        gia_von = st.number_input("Giá vốn / số lượng (nghìn đồng)", 0, step=1)
-        if st.button("✅ Tính tổng tiền"):
-            tong = sl * gia_von
-            st.info(f"Cần trả: **{tong} nghìn đồng**")
-            if ten_hang.strip():
-                add_history(data, "import", f"Đã nhập {sl} {ten_hang}, giá {gia_von} = {tong} nghìn đồng")
-            else:
-                add_history(data, "import", f"Nhập {sl} × {gia_von} = {tong} nghìn đồng")
+                noi_dung = f"Nhập {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
+
+            add_history(data, "profit", noi_dung)
+            add_history(data, "import", noi_dung)
 
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
