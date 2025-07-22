@@ -217,30 +217,30 @@ if username:
         gia_thu = st.number_input("Giá thu / đơn vị (nghìn đồng)", 0, step=1)
         sl_ban_text = st.text_input("Số lượng bán VD: 10 hoặc 5+3")
         gia_ban = st.number_input("Giá bán / đơn vị (nghìn đồng)", 0, step=1)
-        
 
         if st.button("✅ Tính"):
             sl_thu = parse_sl(sl_thu_text)
             sl_ban = parse_sl(sl_ban_text)
-    
+
             tien_von = sl_thu * gia_thu
             tien_ban = sl_ban * gia_ban
             tien_loi = tien_ban - tien_von
 
             st.info(f"👉 Tổng số lượng thu (nhập): **{sl_thu}**")
-            st.info(f"👉 Tổng số lượng bán: **{sl_ban}**")
             st.info(f"👉 Tiền vốn (nhập): **{tien_von} nghìn đồng**")
+            st.info(f"👉 Tổng số lượng bán: **{sl_ban}**")
             st.info(f"👉 Tiền bán: **{tien_ban} nghìn đồng**")
             st.success(f"✅ Tiền lời: **{tien_loi} nghìn đồng**")
-    
-            # Ghi vào lịch sử
-        if ten_hang.strip():
-            noi_dung = f"{ten_hang}: thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
-        else:
-            noi_dung = f"Thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
 
-        add_history(data, "profit", noi_dung)
-        add_history(data, "import", noi_dung)
+            # Lưu lịch sử
+            if ten_hang.strip():
+                noi_dung = f"{ten_hang}: thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
+            else:
+                noi_dung = f"Thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
+
+            add_history(data, "profit", noi_dung)
+            add_history(data, "import", noi_dung)
+            save_data(data)
 
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
