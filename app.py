@@ -518,8 +518,8 @@ if username:
                 min_value=1,
                 max_value=len(profit_history),
                 step=1,
-                key="xoa_lich_su_profit"
-)
+                key="xoa_lich_su_profit_numberinput"
+                )
 
             if st.button("🗑️ Xoá dòng này"):
                 # Do đã reversed nên cần tính chỉ số gốc
