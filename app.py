@@ -16,6 +16,7 @@ def get_latest_backup():
         backups.sort(reverse=True)
         return os.path.join(BACKUP_FOLDER, backups[0])
     return None
+backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
 
 DATA_FOLDER = "data"
 BACKUP_FOLDER = "backups"
