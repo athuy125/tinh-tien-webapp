@@ -1,0 +1,13 @@
+{
+    "debts": {
+        "Nguyen Van A": 500000,
+        "Tran Van B": 300000
+    },
+    "history": [
+        "Đã bán 10kg sầu riêng, lãi 200000",
+        "Đã thu 500000 từ Nguyen Van A"
+    ],
+    "notes": [
+        "Ghi chú quan trọng ngày 22/7"
+    ]
+}
