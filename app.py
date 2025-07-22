@@ -171,6 +171,17 @@ if username:
 
     data = load_data()
     is_vip = data.get("is_vip", False)
+def parse_sl(text):
+    try:
+        text = text.replace(',', '.')
+        if '+' in text:
+            parts = text.split('+')
+            return sum(float(p.strip()) for p in parts)
+        else:
+            return float(text.strip())
+    except:
+        return 0
+
 
     if is_vip:
         st.success(f"🌟 {username}, bạn đang là THÀNH VIÊN VIP! 🌟")
@@ -203,17 +214,6 @@ if username:
         gia_thu = st.number_input("Giá thu / đơn vị (nghìn đồng)", 0, step=1)
         sl_ban_text = st.text_input("Số lượng bán VD: 10 hoặc 5+3")
         gia_ban = st.number_input("Giá bán / đơn vị (nghìn đồng)", 0, step=1)
-        def parse_sl(text):
-            try:
-                # Thay dấu phẩy bằng chấm cho số thập phân
-                text = text.replace(',', '.')
-                if '+' in text:
-                    parts = text.split('+')
-                    return sum(float(p.strip()) for p in parts)
-                else:
-                    return float(text.strip())
-            except:
-                return 0
         
 
         if st.button("✅ Tính"):
