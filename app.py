@@ -539,7 +539,7 @@ if username:
             if uploaded is not None:
                 tmp_path = 'temp_restore.zip'
                 with open(tmp_path, 'wb') as f:
-                f.write(uploaded.getbuffer())
+                    f.write(uploaded.getbuffer())
                 restore_data_folder(tmp_path)
                 st.success("✅ Đã phục hồi dữ liệu thành công!")
         else:
