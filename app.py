@@ -487,6 +487,7 @@ if username:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
     elif choice == "🛡 Sao lưu & Phục hồi dữ liệu":
         st.subheader("📦 Tạo file backup")
+        drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
         if st.button("🛡 Sao lưu toàn bộ dữ liệu"):
             backup_file = backup_data_folder()
             st.success(f"✅ Đã sao lưu: {backup_file}")
