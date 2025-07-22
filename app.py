@@ -212,8 +212,8 @@ if username:
                     return sum(float(p.strip()) for p in parts)
                 else:
                     return float(text.strip())
-        except:
-            return 0
+            except:
+                return 0
         
 
         if st.button("✅ Tính"):
