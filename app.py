@@ -10,6 +10,12 @@ from google.oauth2 import service_account
 import pytz
 from zoneinfo import ZoneInfo
 import glob
+BACKUP_FOLDER = "backups"
+os.makedirs(BACKUP_FOLDER, exist_ok=True)
+
+# Lấy danh sách file backup .zip
+backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
+backup_files.sort(reverse=True)  # sắp xếp mới nhất lên đầu
 def get_latest_backup():
     backups = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
     if backups:
@@ -90,7 +96,7 @@ username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
 # ====== CẤU HÌNH ======
 DATA_FOLDER = 'data'
-BACKUP_FOLDER = 'backup'
+
 
 # Tạo thư mục nếu chưa có
 os.makedirs(DATA_FOLDER, exist_ok=True)
