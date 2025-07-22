@@ -85,6 +85,19 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 # ====== HÀM LOAD & SAVE ======
+def add_history(data, section, info):
+    """
+    Lưu lại lịch sử tính toán.
+    section: "profit" hoặc "import"
+    info: chuỗi mô tả
+    """
+    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    history = data.get("history", {})
+    if section not in history:
+        history[section] = []
+    history[section].append(f"{time}: {info}")
+    data["history"] = history
+    save_data(data)
 def get_filename(username):
     return os.path.join(DATA_FOLDER, f"data_{username}.json")
 
@@ -175,6 +188,8 @@ if username:
         "📊 Máy tính phần trăm (VIP)",
         "📜 Nhật ký hoạt động (VIP)",
         "🛡 Sao lưu & Phục hồi dữ liệu",
+        "📜 Lịch sử tính toán",
+
     ]
 
     choice = st.sidebar.selectbox("📌 Chọn chức năng", menu)
@@ -189,7 +204,7 @@ if username:
         if st.button("✅ Tính lợi nhuận"):
             loi = (gia_ban - gia_von) * sl
             st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
-
+            add_history(data, "profit", f"Bán {sl} × ({gia_ban}-{gia_von}) = {loi} nghìn đồng")
     # Tính tiền nhập hàng
     elif choice == "Tính tiền nhập hàng":
         st.subheader("📦 Tính tiền cần trả khi nhập hàng")
@@ -198,6 +213,7 @@ if username:
         if st.button("✅ Tính tổng tiền"):
             tong = sl * gia_von
             st.info(f"Cần trả: **{tong} nghìn đồng**")
+            add_history(data, "import", f"Nhập {sl} × {gia_von} = {tong} nghìn đồng")
 
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
@@ -433,6 +449,17 @@ if username:
                     f.write(uploaded.getbuffer())
                 restore_data_folder(tmp_path)
                 st.success("✅ Đã phục hồi dữ liệu thành công!")
+    elif choice == "📜 Lịch sử tính toán":
+    st.subheader("📜 Lịch sử tính toán")
+    history = data.get("history", {})
+    tab = st.radio("Chọn loại", ["Tính lợi nhuận", "Tiền nhập hàng"])
+    key = "profit" if tab == "Tính lợi nhuận" else "import"
+    logs = history.get(key, [])
+    if logs:
+        for log in reversed(logs[-100:]):  # Hiển thị 100 log gần nhất
+            st.markdown(f"- {log}")
+    else:
+        st.info("Chưa có lịch sử.")
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
