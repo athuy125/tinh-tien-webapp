@@ -18,6 +18,81 @@ DATA_FILE = os.path.join(DATA_FOLDER, "data.json")
 # Tạo thư mục nếu chưa có
 os.makedirs(DATA_FOLDER, exist_ok=True)
 
+
+# Hàm load data
+def load_data():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {"history": {"profit": []}}
+
+# Hàm save data
+def save_data(data):
+    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+# Bắt đầu app
+st.title("📦 Ứng dụng quản lý & tính toán")
+
+# Giả sử username (có thể nhập hoặc bỏ qua)
+username = st.text_input("Nhập tên của bạn để bắt đầu:")
+
+if username:
+    data = load_data()
+
+    menu = ["📜 Lịch sử tính toán"]
+    choice = st.sidebar.selectbox("Menu", menu)
+
+    if choice == "📜 Lịch sử tính toán":
+        st.subheader("📜 Lịch sử tính toán")
+        history = data.get("history", {})
+        profit_history = history.get("profit", [])
+
+        st.markdown("---")
+        st.subheader("🧮 Tính toán từ dữ liệu lịch sử")
+
+        cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 893432514 + 10000 * 2):")
+
+        if st.button("✅ Tính"):
+            try:
+                ket_qua = eval(cong_thuc, {"__builtins__": {}})
+                st.success(f"📌 Kết quả: **{ket_qua}**")
+
+                # Thêm vào lịch sử
+                new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
+                profit_history.append(new_line)
+                history["profit"] = profit_history
+                data["history"] = history
+                save_data(data)
+                st.info("✅ Đã lưu vào lịch sử tính toán!")
+            except Exception as e:
+                st.error(f"❌ Lỗi: {e}")
+
+        if profit_history:
+            st.markdown("### 📌 Danh sách lịch sử:")
+            for i, item in enumerate(reversed(profit_history), 1):
+                st.markdown(f"**{i}.** {item}")
+
+            idx_xoa = st.number_input(
+                "Nhập số thứ tự dòng muốn xoá",
+                min_value=1,
+                max_value=len(profit_history),
+                step=1,
+                key=f"xoa_lich_su_profit_{username}"
+            )
+
+            if st.button("🗑️ Xoá dòng này"):
+                real_idx = len(profit_history) - idx_xoa
+                removed = profit_history.pop(real_idx)
+                history["profit"] = profit_history
+                data["history"] = history
+                save_data(data)
+                st.success(f"✅ Đã xoá: {removed}")
+        else:
+            st.info("Chưa có lịch sử tính toán nào.")
+else:
+    st.info("👉 Nhập tên để bắt đầu.")
+
 # Hàm nạp và lưu dữ liệu
 def load_data():
     if not os.path.exists(DATA_FILE):
