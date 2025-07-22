@@ -199,22 +199,30 @@ if username:
     # Tính tiền lời
     if choice == "Tính tiền lời":
         st.subheader("💰 Tính tiền lời khi bán hàng")
+        ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải, bánh...)")
         sl = st.number_input("Số lượng bán", 0, step=1)
         gia_ban = st.number_input("Giá bán / số lượng (nghìn đồng)", 0, step=1)
         gia_von = st.number_input("Giá vốn / số lượng (nghìn đồng)", 0, step=1)
         if st.button("✅ Tính lợi nhuận"):
             loi = (gia_ban - gia_von) * sl
             st.success(f"Lợi nhuận: **{loi} nghìn đồng**")
-            add_history(data, "profit", f"Bán {sl} × ({gia_ban}-{gia_von}) = {loi} nghìn đồng")
+            if ten_hang.strip():
+                add_history(data, "profit", f"Đã bán {sl} {ten_hang}, giá bán {gia_ban}, giá vốn {gia_von}, lời {loi} nghìn đồng")
+            else:
+                add_history(data, "profit", f"Bán {sl} × ({gia_ban}-{gia_von}) = {loi} nghìn đồng")
     # Tính tiền nhập hàng
     elif choice == "Tính tiền nhập hàng":
         st.subheader("📦 Tính tiền cần trả khi nhập hàng")
+        ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải, bánh...)")
         sl = st.number_input("Số lượng nhập", 0, step=1)
         gia_von = st.number_input("Giá vốn / số lượng (nghìn đồng)", 0, step=1)
         if st.button("✅ Tính tổng tiền"):
             tong = sl * gia_von
             st.info(f"Cần trả: **{tong} nghìn đồng**")
-            add_history(data, "import", f"Nhập {sl} × {gia_von} = {tong} nghìn đồng")
+            if ten_hang.strip():
+                add_history(data, "import", f"Đã nhập {sl} {ten_hang}, giá {gia_von} = {tong} nghìn đồng")
+            else:
+                add_history(data, "import", f"Nhập {sl} × {gia_von} = {tong} nghìn đồng")
 
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
@@ -470,16 +478,16 @@ if username:
                 restore_data_folder(tmp_path)
                 st.success("✅ Đã phục hồi dữ liệu thành công!")
     elif choice == "📜 Lịch sử tính toán":
-        st.subheader("📜 Lịch sử tính toán")
-        history = data.get("history", {})
-        tab = st.radio("Chọn loại", ["Tính lợi nhuận", "Tiền nhập hàng"])
-        key = "profit" if tab == "Tính lợi nhuận" else "import"
-        logs = history.get(key, [])
-        if logs:
-            for log in reversed(logs[-100:]):  # Hiển thị 100 log gần nhất
-                st.markdown(f"- {log}") 
+    st.subheader("📜 Lịch sử tính toán")
+    history = data.get("history", {})
+    tab = st.radio("Chọn loại", ["Tính lợi nhuận", "Tiền nhập hàng"])
+    key = "profit" if tab == "Tính lợi nhuận" else "import"
+    logs = history.get(key, [])
+    if logs:
+        for log in reversed(logs[-100:]):
+            st.markdown(f"- {log}")
     else:
-            st.info("Chưa có lịch sử.")
+        st.info("Chưa có lịch sử.")
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
