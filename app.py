@@ -10,6 +10,12 @@ from google.oauth2 import service_account
 import pytz
 from zoneinfo import ZoneInfo
 import glob
+import schedule
+def auto_backup():
+    # Ví dụ: chỉ cần chạy hàm backup_data_folder()
+    backup_file = backup_data_folder()
+    print(f"Tự động backup thành công: {backup_file}")
+
 # Cấu hình
 DATA_FOLDER = "data"
 BACKUP_FOLDER = "backups"
