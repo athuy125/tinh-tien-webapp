@@ -514,51 +514,28 @@ if username:
     elif choice == "🛡 Sao lưu & Phục hồi dữ liệu":
         st.subheader("📦 Tạo file backup")
         drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
-        if st.button("🛡 Sao lưu toàn bộ dữ liệu"):
+        if st.button("🛡 Sao lưu dữ liệu"):
             backup_file = backup_data_folder()
-            st.success(f"✅ Đã sao lưu: {backup_file}")
-    
-        # 📥 Nút tải file backup mới nhất
-        latest_backup = get_latest_backup()
-        if latest_backup:
-            with open(latest_backup, "rb") as f:
-                st.download_button(
-                label="📥 Tải file backup mới nhất",
-                data=f,
-                file_name=os.path.basename(latest_backup),
-                mime='application/zip'
-                )
-        else:
-            st.info("Chưa có file backup nào để tải.")
+            st.success(f"✅ Đã tạo backup: {os.path.basename(backup_file)}")
 
-            # Lấy danh sách file backup (mới -> cũ)
-            backup_files = sorted(
-            glob.glob('backups/*.zip'),
-            key=os.path.getctime,
-            reverse=True
-            )
+            # 📋 Liệt kê file backup có sẵn
+            backup_files = sorted([f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')], reverse=True)
 
         if backup_files:
-            for backup_file in backup_files:
-                col1, col2, col3 = st.columns([4, 2, 2])
-            with col1:
-                st.write(f"📦 {os.path.basename(backup_file)}")
-            with col2:
-                with open(backup_file, 'rb') as f:
-                    st.download_button(
-                    label="📥 Tải",
-                    data=f,
-                    file_name=os.path.basename(backup_file),
-                    mime="application/zip",
-                    key=f"download_{os.path.basename(backup_file)}"
-                    )
-            with col3:
-                if st.button("🗑 Xoá", key=f"xoa_{os.path.basename(backup_file)}"):
-                    os.remove(backup_file)
-                    st.success(f"✅ Đã xoá {os.path.basename(backup_file)}")
-                    st.experimental_rerun()  # load lại giao diện sau khi xoá
+            latest_backup = backup_files[0]
+            latest_backup_path = os.path.join(BACKUP_FOLDER, latest_backup)
+
+            # 📥 Nút tải file backup mới nhất
+            with open(latest_backup_path, 'rb') as f:
+                st.download_button(
+                label=f"📥 Tải file backup mới nhất ({latest_backup})",
+                data=f,
+                file_name=latest_backup
+                )
         else:
-                st.info("⚠️ Hiện chưa có file backup nào.")
+            st.info("⚠️ Chưa có file backup nào.")
+                # Lấy danh sách file backup (mới -> cũ)
+        
         # ♻️ Phục hồi
         st.markdown("---")
         st.subheader("♻️ Phục hồi dữ liệu từ file backup")
