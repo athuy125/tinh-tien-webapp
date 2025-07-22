@@ -47,48 +47,7 @@ def add_history(action, detail):
     data["history"].append({"action": action, "detail": detail, "time": datetime.now().isoformat()})
     save_data(data)
 
-# 👉 Giao diện
-st.title("📦 Quản lý dữ liệu (Offline - Local Storage)")
 
-tab1, tab2, tab3 = st.tabs(["📝 Ghi chú", "💰 Người nợ", "📊 Lịch sử"])
-
-with tab1:
-    st.header("📝 Ghi chú cá nhân")
-    new_note = st.text_input("Nhập ghi chú mới:")
-    if st.button("➕ Thêm ghi chú"):
-        if new_note:
-            add_note(new_note)
-            st.success("✅ Đã thêm ghi chú!")
-    st.subheader("📋 Danh sách ghi chú:")
-    for note in load_data()["notes"]:
-        time = datetime.fromisoformat(note["time"]).strftime('%Y-%m-%d %H:%M:%S')
-        st.write(f"{time} - {note['content']}")
-
-with tab2:
-    st.header("💰 Quản lý người nợ")
-    name = st.text_input("Tên người nợ:")
-    amount = st.number_input("Số tiền nợ:", step=1000)
-    if st.button("➕ Thêm người nợ"):
-        if name and amount > 0:
-            add_debtor(name, amount)
-            st.success("✅ Đã thêm người nợ!")
-    st.subheader("📋 Danh sách người nợ:")
-    for d in load_data()["debtors"]:
-        time = datetime.fromisoformat(d["time"]).strftime('%Y-%m-%d %H:%M:%S')
-        st.write(f"{time} - {d['name']} nợ {d['amount']}")
-
-with tab3:
-    st.header("📊 Lịch sử tính toán")
-    action = st.text_input("Hành động:")
-    detail = st.text_input("Chi tiết:")
-    if st.button("➕ Lưu vào lịch sử"):
-        if action and detail:
-            add_history(action, detail)
-            st.success("✅ Đã lưu vào lịch sử!")
-    st.subheader("📋 Danh sách lịch sử:")
-    for h in load_data()["history"]:
-        time = datetime.fromisoformat(h["time"]).strftime('%Y-%m-%d %H:%M:%S')
-        st.write(f"{time} - [{h['action']}] {h['detail']}")
 # Lấy danh sách file backup .zip
 backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
 backup_files.sort(reverse=True)  # sắp xếp mới nhất lên đầu
