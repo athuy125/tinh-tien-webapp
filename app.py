@@ -129,7 +129,7 @@ if st.button("🛡 Sao lưu & Upload lên Google Drive"):
     st.success(f"✅ Đã sao lưu tại: {backup_file}")
 
     # Upload lên Google Drive
-    drive_folder_id = "FOLDER_ID"  # Thay bằng ID thư mục Drive của bạn
+    drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj?usp=sharing"  # Thay bằng ID thư mục Drive
     try:
         file_id = upload_to_drive(backup_file, drive_folder_id)
         st.success(f"📤 Đã upload lên Google Drive, file ID: {file_id}")
