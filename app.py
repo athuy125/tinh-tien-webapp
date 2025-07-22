@@ -102,9 +102,8 @@ DATA_FOLDER = 'data'
 os.makedirs(DATA_FOLDER, exist_ok=True)
 
 
-# ====== HÀM LOAD & SAVE ======
+# ✅ Hàm backup dữ liệu
 def backup_data_folder():
-    """Tạo file backup .zip từ thư mục DATA_FOLDER"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_name = f"backup_{timestamp}.zip"
     backup_path = os.path.join(BACKUP_FOLDER, backup_name)
@@ -135,6 +134,7 @@ def add_history(data, section, info):
 def get_filename(username):
     return os.path.join(DATA_FOLDER, f"data_{username}.json")
 # Hàm phục hồi
+# ✅ Hàm phục hồi dữ liệu từ file zip
 def restore_data_folder(backup_zip_path):
     with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
         zipf.extractall(DATA_FOLDER)
@@ -514,42 +514,37 @@ if username:
     elif choice == "🛡 Sao lưu & Phục hồi dữ liệu":
         st.subheader("📦 Tạo file backup")
         drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
-        if st.button("🛡 Sao lưu dữ liệu"):
+        if st.button("🛡 Sao lưu toàn bộ dữ liệu"):
             backup_file = backup_data_folder()
-            st.success(f"✅ Đã tạo backup: {os.path.basename(backup_file)}")
-
-            # 📋 Liệt kê file backup có sẵn
-            backup_files = sorted([f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')], reverse=True)
-
+            st.success(f"✅ Đã tạo file backup: {os.path.basename(backup_file)}")
+    
+            # 📋 Hiển thị danh sách file backup
+        backup_files = sorted([f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')], reverse=True)
         if backup_files:
             latest_backup = backup_files[0]
             latest_backup_path = os.path.join(BACKUP_FOLDER, latest_backup)
 
-            # 📥 Nút tải file backup mới nhất
-            with open(latest_backup_path, 'rb') as f:
-                st.download_button(
-                label=f"📥 Tải file backup mới nhất ({latest_backup})",
-                data=f,
-                file_name=latest_backup
-                )
-        else:
-            st.info("⚠️ Chưa có file backup nào.")
-                # Lấy danh sách file backup (mới -> cũ)
-        
-        # ♻️ Phục hồi
+        # 📥 Nút tải file backup mới nhất
+        with open(latest_backup_path, 'rb') as f:
+            st.download_button(
+            label=f"📥 Tải file backup mới nhất ({latest_backup})",
+            data=f,
+            file_name=latest_backup
+            )
+
+        # ♻️ Phục hồi dữ liệu từ file tải lên
         st.markdown("---")
-        st.subheader("♻️ Phục hồi dữ liệu từ file backup")
-        uploaded = st.file_uploader("📤 Tải lên file backup (.zip)", type=['zip'])
-        if uploaded is not None:
-            tmp_path = "temp_restore.zip"
-            with open(tmp_path, 'wb') as f:
+        st.subheader("♻️ Phục hồi dữ liệu")
+        uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
+            if uploaded is not None:
+                tmp_path = 'temp_restore.zip'
+                with open(tmp_path, 'wb') as f:
                 f.write(uploaded.getbuffer())
-            if st.button("♻️ Phục hồi dữ liệu"):
-                try:
-                    restore_data_folder(tmp_path)
-                    st.success("✅ Đã phục hồi dữ liệu thành công! (Bạn có thể tải lại trang để xem)")
-                except Exception as e:
-                    st.error(f"❌ Phục hồi thất bại: {e}")
+                restore_data_folder(tmp_path)
+                st.success("✅ Đã phục hồi dữ liệu thành công!")
+        else:
+            st.info("⚠️ Chưa có file backup nào. Hãy tạo backup trước.")
+
     elif choice == "📜 Lịch sử tính toán":
         st.subheader("📜 Lịch sử tính toán")
         
