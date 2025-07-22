@@ -30,6 +30,7 @@ def upload_to_drive(local_file_path, drive_folder_id):
     creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
+
     service = build('drive', 'v3', credentials=creds)
 
     file_metadata = {
