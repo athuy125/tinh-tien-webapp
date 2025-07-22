@@ -524,18 +524,18 @@ if username:
             latest_backup = backup_files[0]
             latest_backup_path = os.path.join(BACKUP_FOLDER, latest_backup)
 
-        # 📥 Nút tải file backup mới nhất
-        with open(latest_backup_path, 'rb') as f:
-            st.download_button(
-            label=f"📥 Tải file backup mới nhất ({latest_backup})",
-            data=f,
-            file_name=latest_backup
-            )
+            # 📥 Nút tải file backup mới nhất
+            with open(latest_backup_path, 'rb') as f:
+                st.download_button(
+                label=f"📥 Tải file backup mới nhất ({latest_backup})",
+                data=f,
+                file_name=latest_backup
+                )
 
-        # ♻️ Phục hồi dữ liệu từ file tải lên
-        st.markdown("---")
-        st.subheader("♻️ Phục hồi dữ liệu")
-        uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
+            # ♻️ Phục hồi dữ liệu từ file tải lên
+            st.markdown("---")
+            st.subheader("♻️ Phục hồi dữ liệu")
+            uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
             if uploaded is not None:
                 tmp_path = 'temp_restore.zip'
                 with open(tmp_path, 'wb') as f:
