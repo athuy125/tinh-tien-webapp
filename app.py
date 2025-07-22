@@ -128,6 +128,12 @@ def add_history(data, section, info):
     save_data(data)
 def get_filename(username):
     return os.path.join(DATA_FOLDER, f"data_{username}.json")
+# Hàm phục hồi
+def restore_data_folder(backup_zip_path):
+    with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
+        zipf.extractall(DATA_FOLDER)
+    return True
+
 
 def load_data(username):
     filepath = get_filename(username)
@@ -547,6 +553,17 @@ if username:
                     st.experimental_rerun()  # load lại giao diện sau khi xoá
         else:
                 st.info("⚠️ Hiện chưa có file backup nào.")
+        # ♻️ Phục hồi
+        st.markdown("---")
+        st.subheader("♻️ Phục hồi dữ liệu từ file backup")
+        uploaded = st.file_uploader("📤 Tải lên file backup (.zip)", type=['zip'])
+        if uploaded is not None:
+            if st.button("♻️ Phục hồi dữ liệu"):
+                tmp_path = "temp_restore.zip"
+            with open(tmp_path, 'wb') as f:
+                f.write(uploaded.getbuffer())
+            restore_data_folder(tmp_path)
+            st.success("✅ Đã phục hồi dữ liệu thành công! (Bạn có thể tải lại trang để xem)")
     elif choice == "📜 Lịch sử tính toán":
         st.subheader("📜 Lịch sử tính toán")
         
