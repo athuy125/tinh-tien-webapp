@@ -514,11 +514,12 @@ if username:
 
                 # Số thứ tự muốn xoá
                 idx_xoa = st.number_input(
-                "Nhập số thứ tự dòng muốn xoá", 
-                min_value=1, 
-                max_value=len(profit_history), 
-                step=1
-            )
+                "Nhập số thứ tự dòng muốn xoá",
+                min_value=1,
+                max_value=len(profit_history),
+                step=1,
+                key="xoa_lich_su_profit"
+)
 
             if st.button("🗑️ Xoá dòng này"):
                 # Do đã reversed nên cần tính chỉ số gốc
