@@ -120,7 +120,7 @@ def save_data(username, data):
 
 def log_action(data, action):
     logs = data.get("logs", [])
-    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    time = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime("%Y-%m-%d %H:%M:%S")
     logs.append(f"{time}: {action}")
     data["logs"] = logs
     return data
