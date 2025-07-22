@@ -10,7 +10,7 @@ from google.oauth2 import service_account
 
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
-    SCOPES = ['https://www.googleapis.com/auth/drive.file']
+    SCOPES = ['https://www.googleapis.com/auth/drive']
     SERVICE_ACCOUNT_FILE = 'credentials.json'
 
     creds = service_account.Credentials.from_service_account_file(
