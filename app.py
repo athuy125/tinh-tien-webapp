@@ -10,6 +10,13 @@ from google.oauth2 import service_account
 import pytz
 from zoneinfo import ZoneInfo
 import glob
+def get_latest_backup():
+    backups = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
+    if backups:
+        backups.sort(reverse=True)
+        return os.path.join(BACKUP_FOLDER, backups[0])
+    return None
+
 DATA_FOLDER = "data"
 BACKUP_FOLDER = "backups"
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
