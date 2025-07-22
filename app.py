@@ -44,10 +44,7 @@ def add_note(content):
     data["notes"].append({"content": content, "time": datetime.now().isoformat()})
     save_data(data)
 
-def add_debtor(name, amount):
-    data = load_data()
-    data["debtors"].append({"name": name, "amount": amount, "time": datetime.now().isoformat()})
-    save_data(data)
+
 
 def add_history(action, detail):
     data = load_data()
