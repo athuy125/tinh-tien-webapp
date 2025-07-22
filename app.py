@@ -196,7 +196,7 @@ if username:
     st.markdown("<hr style='margin:20px 0'>", unsafe_allow_html=True)
 
     # Tính tiền lời
-    elif choice == "Tính lời + vốn (gộp)":
+    if choice == "Tính lời + vốn (gộp)":
         st.subheader("💰 Tính lời + vốn (gộp)")
         ten_hang = st.text_input("Tên mặt hàng (ví dụ: sầu riêng, vải...)")
         sl_ban = st.number_input("Số lượng bán", 0, step=1)
