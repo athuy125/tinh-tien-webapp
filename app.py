@@ -518,7 +518,7 @@ if username:
                 st.success(f"📌 Kết quả: **{ket_qua}**")
 
                 # Thêm vào lịch sử
-                new_line = f"Tổng tiền lời của {cong_thuc} = {ket_qua}"
+                new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
                 profit_history.append(new_line)
                 history["profit"] = profit_history
                 data["history"] = history
