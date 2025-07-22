@@ -547,9 +547,10 @@ if username:
                 data["history"] = history
                 save_data(data)
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
-
-          except Exception as e:
+            except Exception as e:
                 st.error(f"❌ Lỗi: {e}")
+
+          
 
 else:
     st.info("👉 Nhập tên để bắt đầu.")
