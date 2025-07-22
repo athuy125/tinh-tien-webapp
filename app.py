@@ -17,12 +17,8 @@ def get_latest_backup():
         return os.path.join(BACKUP_FOLDER, backups[0])
     return None
 
-DATA_FOLDER = "data"
-BACKUP_FOLDER = "backups"
-backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
 
-datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-os.makedirs(BACKUP_FOLDER, exist_ok=True)
+
 def upload_to_drive(local_file_path, drive_folder_id):
     """Upload file lên Google Drive"""
     SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -98,31 +94,25 @@ BACKUP_FOLDER = 'backup'
 
 # Tạo thư mục nếu chưa có
 os.makedirs(DATA_FOLDER, exist_ok=True)
-os.makedirs(BACKUP_FOLDER, exist_ok=True)
+
 
 # ====== HÀM LOAD & SAVE ======
 def backup_data_folder():
-    os.makedirs(BACKUP_FOLDER, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    zip_name = f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
-    backup_path = os.path.join(BACKUP_FOLDER, zip_name)
-
-    # Tạo nội dung file README
-    readme_content = f"📦 Backup created at {timestamp}\nContains all data from '{DATA_FOLDER}' folder."
+    """Backup toàn bộ thư mục DATA_FOLDER thành file zip."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_name = f"backup_{timestamp}.zip"
+    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
 
     with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        # Thêm tất cả file trong data/
         for root, dirs, files in os.walk(DATA_FOLDER):
             for file in files:
                 filepath = os.path.join(root, file)
+                # Ghi đường dẫn tương đối để khi giải nén sẽ đúng cấu trúc
                 arcname = os.path.relpath(filepath, DATA_FOLDER)
                 zipf.write(filepath, arcname)
-
-        # Thêm file README.txt
-        zipf.writestr("README.txt", readme_content)
-
-    print(f"✅ Backup xong: {backup_path}")
+    print(f"✅ Đã backup thành công: {backup_path}")
     return backup_path
+backup_file = backup_data_folder()
 if __name__ == "__main__":
     backup_file = backup_data_folder()
     print(f"Đã tạo file backup: {backup_file}")
