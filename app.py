@@ -13,18 +13,7 @@ import glob
 import schedule
 import time
 
-def auto_backup():
-    
-    backup_file = backup_data_folder()
-    print(f"Tự động backup thành công: {backup_file}")
 
-# Cấu hình
-DATA_FOLDER = "data"
-BACKUP_FOLDER = "backups"
-DRIVE_FOLDER_ID = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # Thay ID 
-SERVICE_ACCOUNT_FILE = "credentials.json"  
-
-os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 
 # Hàm nạp và lưu dữ liệu
@@ -52,69 +41,14 @@ def add_history(action, detail):
     save_data(data)
 
 
-# Lấy danh sách file backup .zip
-backup_files = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
-backup_files.sort(reverse=True)  # sắp xếp mới nhất lên đầu
-def get_latest_backup():
-    backups = [f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')]
-    if backups:
-        backups.sort(reverse=True)
-        return os.path.join(BACKUP_FOLDER, backups[0])
-    return None
 
 
 
-# Hàm upload lên Google Drive
-def upload_to_drive(local_file_path, drive_folder_id):
-    creds = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE,
-        scopes=['https://www.googleapis.com/auth/drive']
-    )
-    service = build('drive', 'v3', credentials=creds)
 
-    file_metadata = {
-        'name': os.path.basename(local_file_path),
-        'parents': [drive_folder_id]
-    }
-    media = MediaFileUpload(local_file_path, resumable=True)
 
-    file = service.files().create(
-        body=file_metadata,
-        media_body=media,
-        fields='id'
-    ).execute()
 
-    print(f"📤 Uploaded to Google Drive, file ID: {file.get('id')}")
-    return file.get('id')
-# Hàm backup dữ liệu
-def backup_data_folder():
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_name = f"backup_{timestamp}.zip"
-    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
-    with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, dirs, files in os.walk(DATA_FOLDER):
-            for file in files:
-                filepath = os.path.join(root, file)
-                arcname = os.path.relpath(filepath, DATA_FOLDER)
-                zipf.write(filepath, arcname)
-    print(f"✅ Backup created: {backup_path}")
-    return backup_path
 
-# Hàm thực hiện cả backup và upload
-def auto_backup():
-    backup_file = backup_data_folder()
-    try:
-        upload_to_drive(backup_file, DRIVE_FOLDER_ID)
-    except Exception as e:
-        print(f"❌ Upload failed: {e}")
 
-# Cấu hình
-DATA_FOLDER = "data"
-BACKUP_FOLDER = "backups"
-DRIVE_FOLDER_ID = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # Thay ID của bạn
-SERVICE_ACCOUNT_FILE = "credentials.json"  # File credentials
-
-os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 
 
@@ -166,18 +100,14 @@ username = st.text_input("👉 Nhập tên của bạn để bắt đầu:")
 
 
 # ====== CẤU HÌNH ======
-DATA_FOLDER = 'data'
+
 
 
 # Tạo thư mục nếu chưa có
-os.makedirs(DATA_FOLDER, exist_ok=True)
 
 
 
-backup_file = backup_data_folder()
-if __name__ == "__main__":
-    backup_file = backup_data_folder()
-    print(f"Đã tạo file backup: {backup_file}")
+
 def add_history(data, section, info):
     """
     Lưu lại lịch sử tính toán.
@@ -194,11 +124,7 @@ def add_history(data, section, info):
 def get_filename(username):
     return os.path.join(DATA_FOLDER, f"data_{username}.json")
 # Hàm phục hồi
-# ✅ Hàm phục hồi dữ liệu từ file zip
-def restore_data_folder(backup_zip_path):
-    with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
-        zipf.extractall(DATA_FOLDER)
-    return True
+
 
 
 def load_data(username):
@@ -222,21 +148,7 @@ def log_action(data, action):
 
 # ====== SAO LƯU & PHỤC HỒI ======
 
-def restore_data_folder(backup_zip_path):
-    with zipfile.ZipFile(backup_zip_path, 'r') as zipf:
-        zipf.extractall(DATA_FOLDER)
-    return True
-if st.button("🛡 Sao lưu & Upload lên Google Drive"):
-    backup_file = backup_data_folder()
-    st.success(f"✅ Đã sao lưu tại: {backup_file}")
 
-    # Upload lên Google Drive
-    drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"# Thay bằng ID thư mục Drive
-    try:
-        file_id = upload_to_drive(backup_file, drive_folder_id)
-        st.success(f"📤 Đã upload lên Google Drive, file ID: {file_id}")
-    except Exception as e:
-        st.error(f"❌ Upload thất bại: {e}")
 def parse_sl(text):
     """
     Chấp nhận các biểu thức như: 11+5, 11*2, 10/2, 20-3
