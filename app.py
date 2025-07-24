@@ -276,7 +276,7 @@ if username:
                 history[ten_hang].append(noi_dung)
                 data["history"] = history
                 save_data(data)
-
+                save_tinh_toan(username, ten_hang, noi_dung)
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
         st.subheader("🚚 Tính lợi nhuận 1 chuyến xe đầu kéo")
@@ -357,6 +357,7 @@ if username:
         if st.button("Thêm"):
             data[ten_moi] = so_moi
             save_data(data)
+            save_debt(username, ten_moi, so_moi)
             st.success(f"✅ Đã thêm: {ten_moi}")
 
     # VIP
@@ -560,6 +561,11 @@ if username:
             
             selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list(history.keys()))
             if selected_hang:
+                # Lấy từ MongoDB
+                online_history = get_history(username, selected_hang)
+                st.markdown(f"### 🧾 Lịch sử online của **{selected_hang}**:")
+                for item in online_history:
+                    st.markdown(f"- {item['content']}")
                 st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
                 items = history.get(selected_hang, [])
                 for i, item in enumerate(reversed(history[selected_hang]), 1):
