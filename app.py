@@ -13,6 +13,15 @@ import glob
 import schedule
 import time
 from db import save_data, load_data, get_history
+def save_tinh_toan(username, hang, content):
+    """
+    Lưu lịch sử tính toán của 1 mặt hàng cho user vào MongoDB.
+    """
+    collection.update_one(
+        {"username": username},
+        {"$push": {f"data.history.{hang}": content}},
+        upsert=True
+    )
 
 # Tạo thư mục nếu chưa có
 DATA_FOLDER = "data"
