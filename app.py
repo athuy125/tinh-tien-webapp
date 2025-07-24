@@ -545,13 +545,13 @@ if username:
                 list_mat_hang,
                 key=f"select_{username}"
             )
-    
+
             if selected_hang:
                 st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
                 items = history.get(selected_hang, [])
                 for i, item in enumerate(reversed(items), 1):
                     st.markdown(f"**{i}.** {item}")
-
+    
                 # Xoá từng dòng lịch sử
                 if len(items) > 0:
                     idx_xoa = st.number_input(
@@ -563,21 +563,23 @@ if username:
                     )
                     if st.button(f"🗑️ Xoá dòng số {idx_xoa}", key=f"xoa_dong_{selected_hang}_{username}"):
                         real_idx = len(items) - idx_xoa
-                        # Xoá local
-                        removed = items.pop(real_idx)
-                        history[selected_hang] = items
-                        data["history"] = history
-                        save_data(username, data)
-                        save_tinh_toan(username, selected_hang, new_line)
-                        # Xoá online
-                        deleted = delete_history_item(username, selected_hang, real_idx)
-                        st.success(f"✅ Đã xoá dòng: {removed}")
-
+                        if 0 <= real_idx < len(items):
+                            removed = items.pop(real_idx)
+                            # Cập nhật local
+                            history[selected_hang] = items
+                            data["history"] = history
+                            save_data(username, data)
+                            # Cập nhật online
+                            delete_history_item(username, selected_hang, real_idx)
+                            st.success(f"✅ Đã xoá dòng: {removed}")
+                        else:
+                            st.warning("⚠️ Số thứ tự không hợp lệ!")
+    
                 else:
                     st.info("⚠️ Chưa có lịch sử nào để xoá.")
-
+    
                 st.markdown("---")
-
+    
                 # 🌟 Xoá toàn bộ mặt hàng
                 if st.button(f"🗑️ Xoá toàn bộ mặt hàng **{selected_hang}**", key=f"xoa_hang_{selected_hang}_{username}"):
                     confirm = st.radio(
@@ -593,12 +595,13 @@ if username:
                         # Xoá online
                         delete_mat_hang(username, selected_hang)
                         st.success(f"✅ Đã xoá toàn bộ mặt hàng: {selected_hang}")
-
+    
             else:
                 st.info("⚠️ Hiện chưa có mặt hàng nào.")
-
+    
         else:
             st.info("⚠️ Chưa có mặt hàng nào để xem lịch sử.")
+
 
         
 
