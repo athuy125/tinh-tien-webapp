@@ -594,7 +594,7 @@ if username:
                         delete_mat_hang(username, selected_hang)
                         st.success(f"✅ Đã xoá toàn bộ mặt hàng: {selected_hang}")
     
-             else:
+            else:
                 st.info("⚠️ Hiện chưa có mặt hàng nào.")
     
         else:
