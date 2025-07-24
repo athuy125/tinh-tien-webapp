@@ -535,117 +535,63 @@ if username:
 
     elif choice == "📜 Lịch sử tính toán theo mặt hàng":
         st.subheader("📜 Lịch sử tính toán theo mặt hàng")
-    
+
         history = data.get("history", {})
         list_mat_hang = list(history.keys())
 
         if list_mat_hang:
-            selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list_mat_hang)
+            selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list_mat_hang, key=f"select_{username}")
 
             if selected_hang:
-                st.markdown("---")
-                st.subheader("🧮 Thực hiện phép tính mới cho mặt hàng này")
-
-                cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 893432514 + 10000 * 2):")
-
-                if st.button("✅ Tính"):
-                    try:
-                        ket_qua = eval(cong_thuc, {"__builtins__": {}})
-                        st.success(f"📌 Kết quả: **{ket_qua}**")
-
-                        # Lưu kết quả này vào lịch sử của selected_hang
-                        new_line = f"Tính toán: {cong_thuc} = {ket_qua}"
-                        if selected_hang not in history:
-                            history[selected_hang] = []
-                        history[selected_hang].append(new_line)
-                        data["history"] = history
-                        save_data(data)
-                        save_tinh_toan(username, selected_hang, new_line)  # Lưu online luôn
-                        st.info("✅ Đã lưu kết quả vào lịch sử!")
-                    except Exception as e:
-                        st.error(f"❌ Lỗi: {e}")
-
-                # Hiển thị lịch sử
                 st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
                 items = history.get(selected_hang, [])
                 for i, item in enumerate(reversed(items), 1):
                     st.markdown(f"**{i}.** {item}")
 
-                # Tính tổng tiền lời (nếu có)
-                tong_loi = 0
-                for item in items:
-                    if "lời" in item:
-                        try:
-                           
-                            so = item.split("lời")[-1].strip().split()[0]
-                            tong_loi += int(so)
-                        except:
-                            pass
-                if tong_loi > 0:
-                    st.info(f"✅ Vậy tổng tiền lời là: **{tong_loi} nghìn đồng**")
+                # Phần nhập công thức và tính
+                cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 10000*2+5000):", key=f"congthuc_{selected_hang}_{username}")
+                if st.button("✅ Tính", key=f"tinh_{selected_hang}_{username}"):
+                    try:
+                        ket_qua = eval(cong_thuc, {"__builtins__": {}})
+                        st.success(f"📌 Kết quả: **{ket_qua}**")
 
-                # Thêm nút xoá 1 dòng
-                if len(items) > 0:
+                            # Tạo nội dung mới để lưu
+                        new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
+
+                        # Lưu vào history local
+                        if selected_hang not in history:
+                            history[selected_hang] = []
+                        history[selected_hang].append(new_line)
+                        data["history"] = history
+                        save_data(data)
+
+                        # Lưu luôn vào online MongoDB
+                        save_tinh_toan(username, selected_hang, new_line)
+
+                        st.info("✅ Đã lưu vào lịch sử mặt hàng này!")
+                    except Exception as e:
+                        st.error(f"❌ Lỗi: {e}")
+
+                # Xoá dòng
+                if items:
                     idx_xoa = st.number_input(
                         "Nhập số thứ tự dòng muốn xoá",
                         min_value=1,
                         max_value=len(items),
                         step=1,
-                        key=f"xoa_{selected_hang}_{username}"
+                        key=f"xoa_{selected_hang}_{username}_{len(items)}"  # Đảm bảo key duy nhất
                     )
-                    if st.button("🗑️ Xoá dòng này"):
+                    if st.button("🗑️ Xoá dòng này", key=f"xoadong_{selected_hang}_{username}_{len(items)}"):
                         real_idx = len(items) - idx_xoa
                         removed = items.pop(real_idx)
                         history[selected_hang] = items
                         data["history"] = history
                         save_data(data)
                         st.success(f"✅ Đã xoá: {removed}")
-                else:
-                    st.info("⚠️ Chưa có lịch sử nào để xoá.")
+             else:
+                        st.info("⚠️ Chưa có lịch sử nào để xoá.")
         else:
             st.info("⚠️ Chưa có mặt hàng nào để xem lịch sử.")
-
-
-
-        if list_mat_hang:
-            
-            
-            selected_hang = st.selectbox(
-                "📌 Chọn mặt hàng để xem lịch sử", 
-                list_mat_hang,
-                key=f"selectbox_{username}"
-            )
-            if selected_hang:
-                # Lấy từ MongoDB
-                online_history = get_history(username, selected_hang)
-                st.markdown(f"### 🧾 Lịch sử online của **{selected_hang}**:")
-                for item in online_history:
-                    st.markdown(f"- {item['content']}")
-                st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
-                items = history.get(selected_hang, [])
-                for i, item in enumerate(reversed(history[selected_hang]), 1):
-                    st.markdown(f"**{i}.** {item}")
-                    
-
-                # Thêm nút xoá lịch sử từng dòng
-                if len(items) > 0:
-                    idx_xoa = st.number_input(
-                        "Nhập số thứ tự dòng muốn xoá",
-                        min_value=1,
-                        max_value=len(items),
-                        step=1,
-                        key=f"xoa_{selected_hang}_{username}_{len(items)}"
-                    )
-
-                    if st.button("🗑️ Xoá dòng này", key=f"xoa_btn_{selected_hang}_{username}_{len(items)}"):
-                        real_idx = len(items) - idx_xoa
-                        removed = items.pop(real_idx)
-                        history[selected_hang] = items
-                        data["history"] = history
-                        save_data(data)
-                        st.success(f"✅ Đã xoá: {removed}")
-                else:
-                     st.info("⚠️ Chưa có lịch sử nào để xoá.")
 
         
 
