@@ -634,12 +634,13 @@ if username:
 
         if list_mat_hang:
             
-            history = data.get("history", {})  # Lấy lịch sử
+            
             selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list(history.keys()))
             if selected_hang:
                 st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
                 for i, item in enumerate(reversed(history[selected_hang]), 1):
                     st.markdown(f"**{i}.** {item}")
+                    items = history.get(selected_hang, [])
 
                 # Thêm nút xoá lịch sử từng dòng
                 if len(items) > 0:
