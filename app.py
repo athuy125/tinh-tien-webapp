@@ -292,7 +292,7 @@ if username:
         "📊 Máy tính phần trăm (VIP)",
         "📜 Nhật ký hoạt động (VIP)",
         "🛡 Sao lưu & Phục hồi dữ liệu",
-        "📜 Lịch sử tính toán",
+        "📜 Lịch sử tính toán theo mặt hàng",
 
     ]
 
