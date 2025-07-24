@@ -55,5 +55,11 @@ def save_history(username, mat_hang, content):
     })
 
 # ✅ Lấy lịch sử tính toán theo mặt hàng
-def get_history(username, mat_hang):
-    return list(db["histories"].find({"username": username, "mat_hang": mat_hang}))
+def get_history(username, hang):
+    doc = collection.find_one({"username": username})
+    if doc:
+        data = doc.get("data", {})
+        history = data.get("history", {})
+        return history.get(hang, [])
+    else:
+        return []
