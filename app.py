@@ -588,8 +588,8 @@ if username:
                         data["history"] = history
                         save_data(data)
                         st.success(f"✅ Đã xoá: {removed}")
-             else:
-                        st.info("⚠️ Chưa có lịch sử nào để xoá.")
+                else:
+                    st.info("⚠️ Chưa có lịch sử nào để xoá.")
         else:
             st.info("⚠️ Chưa có mặt hàng nào để xem lịch sử.")
 
