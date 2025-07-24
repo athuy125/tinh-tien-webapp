@@ -18,9 +18,6 @@ def delete_mat_hang(username, hang):
             collection.update_one({"username": username}, {"$set": {"data": data}})
 
 def delete_history_item(username, hang, index):
-    """
-    Xoá 1 dòng (index) trong lịch sử của mặt hàng 'hang' trên MongoDB.
-    """
     doc = collection.find_one({"username": username})
     if doc:
         data = doc.get("data", {})
@@ -30,10 +27,7 @@ def delete_history_item(username, hang, index):
             removed = items.pop(index)
             history[hang] = items
             data["history"] = history
-            collection.update_one(
-                {"username": username},
-                {"$set": {"data": data}}
-            )
+            collection.update_one({"username": username}, {"$set": {"data": data}})
             return removed
     return None
 
