@@ -544,18 +544,20 @@ if username:
         profit_history = []
         if st.button("✅ Tính"):
             try:
-                ket_qua = eval(cong_thuc, {"__builtins__": {}})
-                st.success(f"📌 Kết quả: **{ket_qua}**")
-
-                # Thêm vào lịch sử
-                new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
-                profit_history.append(new_line)
-                history["profit"] = profit_history
-                data["history"] = history
-                save_data(data)
-                st.info("✅ Đã lưu vào lịch sử tính toán!")
+                if cong_thuc.strip():  # kiểm tra không rỗng
+                    ket_qua = eval(cong_thuc, {"__builtins__": {}})
+                    st.success(f"📌 Kết quả: **{ket_qua}**")
+                    # Lưu
+                    new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
+                    profit_history.append(new_line)
+                    history["profit"] = profit_history
+                    data["history"] = history
+                    save_data(data)
+                    st.info("✅ Đã lưu vào lịch sử tính toán!")
+                else:
+                    st.warning("⚠️ Vui lòng nhập công thức trước khi tính.")
             except Exception as e:
-                st.error(f"❌ Lỗi: {e}")
+                    st.error(f"❌ Lỗi: {e}")
 
 
         if list_mat_hang:
