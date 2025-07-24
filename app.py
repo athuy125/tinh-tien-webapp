@@ -278,6 +278,8 @@ if username:
                 history[ten_hang].append(noi_dung)
                 data["history"] = history
                 save_data(data)
+                save_tinh_toan(username, ten_hang, noi_dung)
+                st.success("✅ Đã lưu vào MongoDB!")
                 
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
