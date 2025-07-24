@@ -588,15 +588,13 @@ if username:
                         key=f"confirm_{selected_hang}_{username}"
                     )
                     if confirm == "Có, xoá luôn!":
-                        # Xoá local
                         del history[selected_hang]
                         data["history"] = history
                         save_data(username, data)
-                        # Xoá online
                         delete_mat_hang(username, selected_hang)
                         st.success(f"✅ Đã xoá toàn bộ mặt hàng: {selected_hang}")
     
-            else:
+             else:
                 st.info("⚠️ Hiện chưa có mặt hàng nào.")
     
         else:
