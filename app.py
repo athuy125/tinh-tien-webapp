@@ -555,7 +555,7 @@ if username:
                     history["profit"] = profit_history
                     data["history"] = history
                     save_data(data)
-                    save_tinh_toan(username, new_line)
+                    save_tinh_toan(username, new_line, )
                     st.info("✅ Đã lưu vào lịch sử tính toán!")
                 else:
                     st.warning("⚠️ Vui lòng nhập công thức trước khi tính.")
