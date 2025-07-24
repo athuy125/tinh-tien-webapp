@@ -8,13 +8,14 @@ client = MongoClient(MONGO_URI)
 db = client["athuy125"]           # Tên database
 collection = db["atneverdie1"]         # Tên collection
 def delete_mat_hang(username, hang):
-    """
-    Xoá toàn bộ lịch sử của mặt hàng 'hang' trên MongoDB.
-    """
-    collection.update_one(
-        {"username": username},
-        {"$unset": {f"data.history.{hang}": ""}}
-    )
+    doc = collection.find_one({"username": username})
+    if doc:
+        data = doc.get("data", {})
+        history = data.get("history", {})
+        if hang in history:
+            del history[hang]
+            data["history"] = history
+            collection.update_one({"username": username}, {"$set": {"data": data}})
 
 def delete_history_item(username, hang, index):
     """
