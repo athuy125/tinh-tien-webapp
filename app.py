@@ -640,22 +640,25 @@ if username:
                     st.markdown(f"**{i}.** {item}")
 
                 # Thêm nút xoá lịch sử từng dòng
-                idx_xoa = st.number_input(
-                    "Nhập số thứ tự dòng muốn xoá",
-                    min_value=1,
-                    max_value=len(history[selected_hang]),
-                    step=1,
-                    key=f"xoa_{selected_hang}_{username}"
-              )
-            if st.button("🗑️ Xoá dòng này"):
-                real_idx = len(history[selected_hang]) - idx_xoa
-                removed = history[selected_hang].pop(real_idx)
-                data["history"] = history
-                save_data(data)
-                st.success(f"✅ Đã xoá: {removed}")
+                if len(items) > 0:
+                    idx_xoa = st.number_input(
+                        "Nhập số thứ tự dòng muốn xoá",
+                        min_value=1,
+                        max_value=len(items),
+                        step=1,
+                        key=f"xoa_{selected_hang}_{username}"
+                     )
 
-        else:
-            st.info("⚠️ Chưa có lịch sử tính toán nào.")
+                    if st.button("🗑️ Xoá dòng này"):
+                        real_idx = len(items) - idx_xoa
+                        removed = items.pop(real_idx)
+                        history[selected_hang] = items
+                        data["history"] = history
+                        save_data(data)
+                        st.success(f"✅ Đã xoá: {removed}")
+                else:
+                     st.info("⚠️ Chưa có lịch sử nào để xoá.")
+
         
 
           
