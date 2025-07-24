@@ -610,7 +610,11 @@ if username:
         if list_mat_hang:
             
             
-            selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list(history.keys()))
+            selected_hang = st.selectbox(
+                "📌 Chọn mặt hàng để xem lịch sử", 
+                list_mat_hang,
+                key=f"selectbox_{username}"
+            )
             if selected_hang:
                 # Lấy từ MongoDB
                 online_history = get_history(username, selected_hang)
