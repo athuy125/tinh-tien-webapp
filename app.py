@@ -633,7 +633,9 @@ if username:
 
 
         if list_mat_hang:
-            selected_hang = st.selectbox("Chọn mặt hàng", list_mat_hang)
+            
+            history = data.get("history", {})  # Lấy lịch sử
+            selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list(history.keys()))
             if selected_hang:
                 st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
                 for i, item in enumerate(reversed(history[selected_hang]), 1):
