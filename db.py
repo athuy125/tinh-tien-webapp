@@ -17,6 +17,14 @@ def save_data(username, data):
         {"$set": {"data": data}},
         upsert=True
     )
+def delete_mat_hang(username, hang):
+    """
+    Xoá toàn bộ lịch sử của mặt hàng 'hang' trong online database.
+    """
+    collection.update_one(
+        {"username": username},
+        {"$unset": {f"data.history.{hang}": ""}}
+    )
 
 def load_data(username):
     """
