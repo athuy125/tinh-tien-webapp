@@ -634,8 +634,8 @@ if username:
                         min_value=1,
                         max_value=len(items),
                         step=1,
-                        key=f"xoa_{selected_hang}_{username}"
-                     )
+                        key=f"xoa_{selected_hang}_{username}_{len(items)}"
+                    )
 
                     if st.button("🗑️ Xoá dòng này"):
                         real_idx = len(items) - idx_xoa
