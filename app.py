@@ -12,7 +12,38 @@ from zoneinfo import ZoneInfo
 import glob
 import schedule
 import time
+# Tạo thư mục nếu chưa có
+DATA_FOLDER = "data"
+BACKUP_FOLDER = "backups"
+os.makedirs(DATA_FOLDER, exist_ok=True)
+os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
+# Hàm tạo file backup .zip
+def backup_data_folder():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_name = f"backup_{timestamp}.zip"
+    backup_path = os.path.join(BACKUP_FOLDER, backup_name)
+    with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for foldername, _, filenames in os.walk(DATA_FOLDER):
+            for filename in filenames:
+                filepath = os.path.join(foldername, filename)
+                arcname = os.path.relpath(filepath, DATA_FOLDER)
+                zipf.write(filepath, arcname)
+    return backup_path
+
+# Hàm upload lên Google Drive
+def upload_to_drive(local_file_path, drive_folder_id):
+    SCOPES = ['https://www.googleapis.com/auth/drive']
+    SERVICE_ACCOUNT_FILE = 'credentials.json'
+
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = build('drive', 'v3', credentials=creds)
+
+    file_metadata = {'name': os.path.basename(local_file_path), 'parents': [drive_folder_id]}
+    media = MediaFileUpload(local_file_path, resumable=True)
+    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    return file.get("id")
 
 
 
@@ -484,38 +515,18 @@ if username:
         else:
             st.warning("🌟 Vui lòng nâng cấp VIP để dùng tính năng này!")
     elif choice == "🛡 Sao lưu & Phục hồi dữ liệu":
-        st.subheader("📦 Tạo file backup")
-        drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"
-        if st.button("🛡 Sao lưu toàn bộ dữ liệu"):
+        st.title("🛡 Tự động backup & upload Google Drive")
+
+        if st.button("📦 Sao lưu và Upload"):
             backup_file = backup_data_folder()
             st.success(f"✅ Đã tạo file backup: {os.path.basename(backup_file)}")
-    
-            # 📋 Hiển thị danh sách file backup
-        backup_files = sorted([f for f in os.listdir(BACKUP_FOLDER) if f.endswith('.zip')], reverse=True)
-        if backup_files:
-            latest_backup = backup_files[0]
-            latest_backup_path = os.path.join(BACKUP_FOLDER, latest_backup)
 
-            # 📥 Nút tải file backup mới nhất
-            with open(latest_backup_path, 'rb') as f:
-                st.download_button(
-                label=f"📥 Tải file backup mới nhất ({latest_backup})",
-                data=f,
-                file_name=latest_backup
-                )
-
-            # ♻️ Phục hồi dữ liệu từ file tải lên
-            st.markdown("---")
-            st.subheader("♻️ Phục hồi dữ liệu")
-            uploaded = st.file_uploader("Tải lên file backup (.zip)", type=['zip'])
-            if uploaded is not None:
-                tmp_path = 'temp_restore.zip'
-                with open(tmp_path, 'wb') as f:
-                    f.write(uploaded.getbuffer())
-                restore_data_folder(tmp_path)
-                st.success("✅ Đã phục hồi dữ liệu thành công!")
-        else:
-            st.info("⚠️ Chưa có file backup nào. Hãy tạo backup trước.")
+            try:
+                drive_folder_id = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # <-- Thay bằng folder ID ở Bước 4
+                file_id = upload_to_drive(backup_file, drive_folder_id)
+                st.success(f"📤 Đã upload lên Google Drive! File ID: {file_id}")
+            except Exception as e:
+                st.error(f"❌ Lỗi upload: {e}")
 
     elif choice == "📜 Lịch sử tính toán theo mặt hàng":
         st.subheader("📜 Lịch sử tính toán theo mặt hàng")
