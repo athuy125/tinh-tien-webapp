@@ -14,15 +14,15 @@ import schedule
 import time
 
 def auto_backup():
-    # Ví dụ: chỉ cần chạy hàm backup_data_folder()
+    
     backup_file = backup_data_folder()
     print(f"Tự động backup thành công: {backup_file}")
 
 # Cấu hình
 DATA_FOLDER = "data"
 BACKUP_FOLDER = "backups"
-DRIVE_FOLDER_ID = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # Thay ID của bạn
-SERVICE_ACCOUNT_FILE = "credentials.json"  # File credentials
+DRIVE_FOLDER_ID = "1TLcveIa9xgbgOLXfCnR48_fLAh1uVhPj"  # Thay ID 
+SERVICE_ACCOUNT_FILE = "credentials.json"  
 
 os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
@@ -118,7 +118,7 @@ os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
 
 
-# PWA header (nếu muốn)
+# PWA header
 st.markdown("""
 <link rel="manifest" href="/manifest.json">
 <script>
@@ -243,7 +243,7 @@ def parse_sl(text):
     """
     try:
         text = text.replace(',', '.')  # đổi , thành .
-        # Chỉ cho phép số và +-*/. và khoảng trắng
+       
         allowed = "0123456789+-*/.() "
         if all(c in allowed for c in text):
             return eval(text)
@@ -324,14 +324,14 @@ if username:
             
 
 
-            # Lưu lịch sử
-            if ten_hang.strip():
-                noi_dung = f"{ten_hang}: thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
-            else:
-                noi_dung = f"Thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi} nghìn đồng"
-
-            add_history(data, "profit", noi_dung)
-            add_history(data, "import", noi_dung)
+            # --- Lưu lịch sử theo mặt hàng ---
+        if ten_hang.strip():
+            noi_dung = f"{ten_hang}: thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi}"
+            history = data.get("history", {})
+            if ten_hang not in history:
+                history[ten_hang] = []
+            history[ten_hang].append(noi_dung)
+            data["history"] = history
             save_data(data)
 
     # Lợi nhuận xe đầu kéo
@@ -605,12 +605,12 @@ if username:
         else:
             st.info("⚠️ Chưa có file backup nào. Hãy tạo backup trước.")
 
-    elif choice == "📜 Lịch sử tính toán":
-        st.subheader("📜 Lịch sử tính toán")
+    elif choice == "📜 Lịch sử tính toán theo mặt hàng":
+        st.subheader("📜 Lịch sử tính toán theo mặt hàng")
         
 
         history = data.get("history", {})
-        profit_history = history.get("profit", [])
+        list_mat_hang = list(history.keys())
         st.markdown("---")
         st.subheader("🧮 Tính toán từ dữ liệu lịch sử")
 
@@ -632,28 +632,30 @@ if username:
                 st.error(f"❌ Lỗi: {e}")
 
 
-        if profit_history:
-            st.markdown("### 📌 Danh sách lịch sử:")
-            for i, item in enumerate(reversed(profit_history), 1):
-                st.markdown(f"**{i}.** {item}")
+        if list_mat_hang:
+            selected_hang = st.selectbox("Chọn mặt hàng", list_mat_hang)
+            if selected_hang:
+                st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
+                for i, item in enumerate(reversed(history[selected_hang]), 1):
+                    st.markdown(f"**{i}.** {item}")
 
-            idx_xoa = st.number_input(
-                "Nhập số thứ tự dòng muốn xoá",
-                min_value=1,
-                max_value=len(profit_history),
-                step=1,
-                key=f"xoa_lich_su_profit_{username}"
-            )
+                # Thêm nút xoá lịch sử từng dòng
+                idx_xoa = st.number_input(
+                    "Nhập số thứ tự dòng muốn xoá",
+                    min_value=1,
+                    max_value=len(history[selected_hang]),
+                    step=1,
+                    key=f"xoa_{selected_hang}_{username}"
+              )
+        if st.button("🗑️ Xoá dòng này"):
+            real_idx = len(history[selected_hang]) - idx_xoa
+            removed = history[selected_hang].pop(real_idx)
+            data["history"] = history
+            save_data(data)
+            st.success(f"✅ Đã xoá: {removed}")
 
-            if st.button("🗑️ Xoá dòng này"):
-                real_idx = len(profit_history) - idx_xoa
-                removed = profit_history.pop(real_idx)
-                history["profit"] = profit_history
-                data["history"] = history
-                save_data(data)
-                st.success(f"✅ Đã xoá: {removed}")
-        else:
-            st.info("Chưa có lịch sử tính toán nào.")
+else:
+    st.info("⚠️ Chưa có lịch sử tính toán nào.")
         
 
           
