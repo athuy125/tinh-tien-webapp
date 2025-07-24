@@ -637,7 +637,7 @@ if username:
                         key=f"xoa_{selected_hang}_{username}_{len(items)}"
                     )
 
-                    if st.button("🗑️ Xoá dòng này"):
+                    if st.button("🗑️ Xoá dòng này", key=f"xoa_btn_{selected_hang}_{username}_{len(items)}"):
                         real_idx = len(items) - idx_xoa
                         removed = items.pop(real_idx)
                         history[selected_hang] = items
