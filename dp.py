@@ -5,8 +5,8 @@ from datetime import datetime
 MONGO_URI = "mongodb+srv://<db_username>:<db_password>@cluster0.sjcwtjn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 client = MongoClient(MONGO_URI)
-db = client["athuy125"]           # Tên database
-collection = db["atneverdie1"]         # Tên collection
+db = client["mydb"]           # Tên database
+collection = db["users"]         # Tên collection
 
 def save_data(username, data):
     """
