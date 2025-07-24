@@ -325,14 +325,14 @@ if username:
 
 
             # --- Lưu lịch sử theo mặt hàng ---
-        if ten_hang.strip():
-            noi_dung = f"{ten_hang}: thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi}"
-            history = data.get("history", {})
-            if ten_hang not in history:
-                history[ten_hang] = []
-            history[ten_hang].append(noi_dung)
-            data["history"] = history
-            save_data(data)
+            if ten_hang.strip():
+                noi_dung = f"{ten_hang}: thu {sl_thu}×{gia_thu}={tien_von}, bán {sl_ban}×{gia_ban}={tien_ban}, lời {tien_loi}"
+                history = data.get("history", {})
+                if ten_hang not in history:
+                    history[ten_hang] = []
+                history[ten_hang].append(noi_dung)
+                data["history"] = history
+                save_data(data)
 
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
