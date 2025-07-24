@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 import glob
 import schedule
 import time
-from db import save_data, load_data
+from db import save_data, load_data, get_history
 
 # Tạo thư mục nếu chưa có
 DATA_FOLDER = "data"
