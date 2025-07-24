@@ -1,11 +1,13 @@
-# 📦 Công cụ Tính Tiền & Quản Lý Nợ by Huyhihihi
+# 📦 Tính Tiền WebApp + MongoDB Atlas
 
-✅ App nhỏ để tính tiền lời, nhập hàng và quản lý danh sách nợ.
-🌸 Giao diện dễ dùng, phù hợp cho người lớn tuổi.
+Webapp nhỏ lưu dữ liệu online trên MongoDB Atlas.  
+Viết bằng Python + Streamlit.
 
-## Hướng dẫn chạy
+---
 
-
+## 🚀 Cách chạy local
 ```bash
+git clone https://github.com/yourusername/tinh-tien-webapp.git
+cd tinh-tien-webapp
 pip install -r requirements.txt
-streamlit run app.py
+python -m streamlit run app.py
