@@ -647,15 +647,15 @@ if username:
                     step=1,
                     key=f"xoa_{selected_hang}_{username}"
               )
-        if st.button("🗑️ Xoá dòng này"):
-            real_idx = len(history[selected_hang]) - idx_xoa
-            removed = history[selected_hang].pop(real_idx)
-            data["history"] = history
-            save_data(data)
-            st.success(f"✅ Đã xoá: {removed}")
+            if st.button("🗑️ Xoá dòng này"):
+                real_idx = len(history[selected_hang]) - idx_xoa
+                removed = history[selected_hang].pop(real_idx)
+                data["history"] = history
+                save_data(data)
+                st.success(f"✅ Đã xoá: {removed}")
 
-else:
-    st.info("⚠️ Chưa có lịch sử tính toán nào.")
+        else:
+            st.info("⚠️ Chưa có lịch sử tính toán nào.")
         
 
           
