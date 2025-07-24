@@ -12,6 +12,8 @@ from zoneinfo import ZoneInfo
 import glob
 import schedule
 import time
+from db import get_history
+
 # Tạo thư mục nếu chưa có
 DATA_FOLDER = "data"
 BACKUP_FOLDER = "backups"
