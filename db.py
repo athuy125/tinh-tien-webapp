@@ -1,8 +1,8 @@
-# db.py
+from config import MONGO_URI
 from pymongo import MongoClient
 from datetime import datetime
 # 👉 Điền URI của bạn từ MongoDB Atlas
-MONGO_URI = "mongodb+srv://athuy125:atneverdie1@cluster0.sjcwtjn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
 
 client = MongoClient(MONGO_URI)
 db = client["athuy125"]           # Tên database
