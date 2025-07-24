@@ -7,6 +7,34 @@ from datetime import datetime
 client = MongoClient(MONGO_URI)
 db = client["athuy125"]           # Tên database
 collection = db["atneverdie1"]         # Tên collection
+def delete_mat_hang(username, hang):
+    """
+    Xoá toàn bộ lịch sử của mặt hàng 'hang' trên MongoDB.
+    """
+    collection.update_one(
+        {"username": username},
+        {"$unset": {f"data.history.{hang}": ""}}
+    )
+
+def delete_history_item(username, hang, index):
+    """
+    Xoá 1 dòng (index) trong lịch sử của mặt hàng 'hang' trên MongoDB.
+    """
+    doc = collection.find_one({"username": username})
+    if doc:
+        data = doc.get("data", {})
+        history = data.get("history", {})
+        items = history.get(hang, [])
+        if 0 <= index < len(items):
+            removed = items.pop(index)
+            history[hang] = items
+            data["history"] = history
+            collection.update_one(
+                {"username": username},
+                {"$set": {"data": data}}
+            )
+            return removed
+    return None
 
 def save_data(username, data):
     """
