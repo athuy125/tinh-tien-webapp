@@ -28,14 +28,15 @@ def load_data(username):
     else:
         return {}
 # ✅ Lưu dữ liệu tính toán
-def save_tinh_toan(username, mat_hang, noi_dung):
-    doc = {
-        "username": username,
-        "mat_hang": mat_hang,
-        "noi_dung": noi_dung,
-        "time": datetime.now().isoformat()
-    }
-    collection.insert_one(doc)
+def save_tinh_toan(username, hang, content):
+    """
+    Lưu lịch sử tính toán của 1 mặt hàng cho user vào MongoDB.
+    """
+    collection.update_one(
+        {"username": username},
+        {"$push": {f"data.history.{hang}": content}},
+        upsert=True
+    )
 
 # ✅ Lưu / cập nhật nợ
 def save_debt(username, name, amount):
