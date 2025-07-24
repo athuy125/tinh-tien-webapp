@@ -541,7 +541,7 @@ if username:
         st.subheader("🧮 Tính toán từ dữ liệu lịch sử")
 
         cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 893432514 + 10000 * 2):")
-
+        profit_history = []
         if st.button("✅ Tính"):
             try:
                 ket_qua = eval(cong_thuc, {"__builtins__": {}})
