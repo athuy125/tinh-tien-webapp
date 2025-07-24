@@ -278,7 +278,7 @@ if username:
                 history[ten_hang].append(noi_dung)
                 data["history"] = history
                 save_data(data)
-                save_tinh_toan(username, ten_hang, noi_dung)
+                save_history(username, mat_hang, content)
     # Lợi nhuận xe đầu kéo
     elif choice == "💼 Lợi nhuận chuyến xe đầu kéo":
         st.subheader("🚚 Tính lợi nhuận 1 chuyến xe đầu kéo")
@@ -553,7 +553,7 @@ if username:
                     history["profit"] = profit_history
                     data["history"] = history
                     save_data(data)
-                    save_tinh_toan(username, ten_hang, noi_dung)
+                    save_history(username, mat_hang, content)
                     st.info("✅ Đã lưu vào lịch sử tính toán!")
                 else:
                     st.warning("⚠️ Vui lòng nhập công thức trước khi tính.")
