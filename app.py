@@ -535,22 +535,21 @@ if username:
 
     elif choice == "📜 Lịch sử tính toán theo mặt hàng":
         st.subheader("📜 Lịch sử tính toán theo mặt hàng")
-    
+        
+
         history = data.get("history", {})
         list_mat_hang = list(history.keys())
-    
         st.markdown("---")
         st.subheader("🧮 Tính toán từ dữ liệu lịch sử")
-    
+
         cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 893432514 + 10000 * 2):")
-    
+
         if st.button("✅ Tính"):
             try:
                 ket_qua = eval(cong_thuc, {"__builtins__": {}})
                 st.success(f"📌 Kết quả: **{ket_qua}**")
-    
+
                 # Thêm vào lịch sử
-                profit_history = history.get("profit", [])
                 new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
                 profit_history.append(new_line)
                 history["profit"] = profit_history
@@ -559,36 +558,34 @@ if username:
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
             except Exception as e:
                 st.error(f"❌ Lỗi: {e}")
-    
+
+
         if list_mat_hang:
-            selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list_mat_hang)
+            
+            
+            selected_hang = st.selectbox("📌 Chọn mặt hàng để xem lịch sử", list(history.keys()))
             if selected_hang:
-                # Lấy lịch sử online
+                # Lấy từ MongoDB
                 online_history = get_history(username, selected_hang)
                 st.markdown(f"### 🧾 Lịch sử online của **{selected_hang}**:")
-                if online_history and isinstance(online_history, list):
-                    for item in online_history:
-                        if isinstance(item, dict) and "content" in item:
-                            st.markdown(f"- {item['content']}")
-                        else:
-                            st.warning("⚠️ Lỗi dữ liệu online: item không đúng định dạng.")
-                else:
-                    st.info("⚠️ Không có dữ liệu online.")
-    
-                # Lấy lịch sử local
+                for item in online_history:
+                    st.markdown(f"- {item['content']}")
+                st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
                 items = history.get(selected_hang, [])
-                st.markdown(f"### 🧾 Lịch sử local của **{selected_hang}**:")
-                if items:
-                    for i, item in enumerate(reversed(items), 1):
-                        st.markdown(f"**{i}.** {item}")
-    
+                for i, item in enumerate(reversed(history[selected_hang]), 1):
+                    st.markdown(f"**{i}.** {item}")
+                    
+
+                # Thêm nút xoá lịch sử từng dòng
+                if len(items) > 0:
                     idx_xoa = st.number_input(
                         "Nhập số thứ tự dòng muốn xoá",
                         min_value=1,
                         max_value=len(items),
                         step=1,
                         key=f"xoa_{selected_hang}_{username}"
-                    )
+                     )
+
                     if st.button("🗑️ Xoá dòng này"):
                         real_idx = len(items) - idx_xoa
                         removed = items.pop(real_idx)
@@ -597,11 +594,7 @@ if username:
                         save_data(data)
                         st.success(f"✅ Đã xoá: {removed}")
                 else:
-                    st.info("⚠️ Chưa có lịch sử nào để xoá.")
-            else:
-                st.info("⚠️ Vui lòng chọn mặt hàng.")
-        else:
-            st.info("⚠️ Chưa có mặt hàng nào trong lịch sử.")
+                     st.info("⚠️ Chưa có lịch sử nào để xoá.")
 
 
 
