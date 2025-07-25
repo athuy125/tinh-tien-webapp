@@ -39,6 +39,7 @@ def save_data(username, data):
     )
 
 
+
 def load_data(username):
     """
     Lấy data (kiểu dict) của 1 user theo username.
