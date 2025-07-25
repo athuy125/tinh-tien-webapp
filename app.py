@@ -535,7 +535,10 @@ if username:
 
     elif choice == "📜 Lịch sử tính toán theo mặt hàng":
         st.subheader("📜 Lịch sử tính toán theo mặt hàng")
-
+        history = data.get("history", {})
+        list_mat_hang = list(history.keys())
+        st.markdown("---")
+        st.subheader("🧮 Tính toán từ dữ liệu lịch sử")
         cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 893432514 + 10000 * 2):")
 
         if st.button("✅ Tính"):
@@ -554,7 +557,7 @@ if username:
                 st.error(f"❌ Lỗi: {e}")
 
         
-        list_mat_hang = list(history.keys())
+        
         if list_mat_hang:
             selected_hang = st.selectbox(
                 "📌 Chọn mặt hàng để xem lịch sử",
