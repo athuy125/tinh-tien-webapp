@@ -568,12 +568,16 @@ if username:
                 # Lấy từ MongoDB
                 online_history = get_history(username, selected_hang)
                 st.markdown(f"### 🧾 Lịch sử online của **{selected_hang}**:")
-                for item in online_history:
-                    st.markdown(f"- {item['content']}")
-                st.markdown(f"### 🧾 Lịch sử của **{selected_hang}**:")
-                items = history.get(selected_hang, [])
-                for i, item in enumerate(reversed(history[selected_hang]), 1):
-                    st.markdown(f"**{i}.** {item}")
+    
+                if online_history and isinstance(online_history, list):
+                    for item in online_history:
+                        # Kiểm tra an toàn
+                        if isinstance(item, dict) and "content" in item:
+                            st.markdown(f"- {item['content']}")
+                        else:
+                            st.warning("⚠️ Lỗi dữ liệu online: item không đúng định dạng.")
+                else:
+                    st.info("⚠️ Không có dữ liệu online.")
                     
 
                 # Thêm nút xoá lịch sử từng dòng
