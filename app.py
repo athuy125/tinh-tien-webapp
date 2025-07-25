@@ -553,7 +553,6 @@ if username:
                 history["profit"].append(new_line)
                 data["history"] = history
                 save_data(username, data)
-                save_data(data)
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
             except Exception as e:
                 st.error(f"❌ Lỗi: {e}")
