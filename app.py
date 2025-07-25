@@ -552,9 +552,12 @@ if username:
 
                 # Thêm vào lịch sử
                 new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
-                profit_history.append(new_line)
-                history["profit"] = profit_history
+                history = data.get("history", {})
+                if "profit" not in history:
+                    history["profit"] = []
+                history["profit"].append(new_line)
                 data["history"] = history
+                save_data(username, data)
                 save_data(data)
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
             except Exception as e:
