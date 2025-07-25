@@ -32,14 +32,12 @@ def delete_mat_hang(username, hang):
             collection.update_one({"username": username}, {"$set": {"data": data}})
 
 def save_data(username, data):
-    """
-    Lưu data (kiểu dict) của 1 user theo username.
-    """
     collection.update_one(
         {"username": username},
         {"$set": {"data": data}},
         upsert=True
     )
+
 
 def load_data(username):
     """
