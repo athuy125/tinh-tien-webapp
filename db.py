@@ -32,7 +32,12 @@ def delete_mat_hang(username, hang):
             collection.update_one({"username": username}, {"$set": {"data": data}})
 
 def save_data(username, data):
-    collection.update_one({"username": username}, {"$set": {"data": data}}, upsert=True)
+    collection.update_one(
+        {"username": username},
+        {"$set": {"data": data}},
+        upsert=True
+    )
+
 
 
 
