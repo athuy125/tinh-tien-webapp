@@ -542,18 +542,13 @@ if username:
             try:
                 ket_qua = eval(cong_thuc, {"__builtins__": {}})
                 st.success(f"📌 Kết quả: **{ket_qua}**")
-    
+
                 # Thêm vào lịch sử
                 new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
-                history = data.get("history", {})
-                if "profit" not in history:
-                    history["profit"] = []
-                history["profit"].append(new_line)
+                profit_history.append(new_line)
+                history["profit"] = profit_history
                 data["history"] = history
-    
-                # Lưu lên online
-                save_data(username, data)
-    
+                save_data(data)
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
             except Exception as e:
                 st.error(f"❌ Lỗi: {e}")
