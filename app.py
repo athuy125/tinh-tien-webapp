@@ -536,20 +536,13 @@ if username:
     elif choice == "📜 Lịch sử tính toán theo mặt hàng":
         st.subheader("📜 Lịch sử tính toán theo mặt hàng")
 
-        history = data.get("history", {})
-        list_mat_hang = list(history.keys())
-      
-     
-        st.markdown("---")
-        st.subheader("🧮 Tính toán từ dữ liệu lịch sử")
-
         cong_thuc = st.text_input("✏️ Nhập công thức (ví dụ: 893432514 + 10000 * 2):")
 
         if st.button("✅ Tính"):
             try:
                 ket_qua = eval(cong_thuc, {"__builtins__": {}})
                 st.success(f"📌 Kết quả: **{ket_qua}**")
-
+    
                 # Thêm vào lịch sử
                 new_line = f"Tổng tiền của {cong_thuc} = {ket_qua}"
                 history = data.get("history", {})
@@ -557,12 +550,14 @@ if username:
                     history["profit"] = []
                 history["profit"].append(new_line)
                 data["history"] = history
-                save_data(username, new_line)
-                sava_data(data)
-                
+    
+                # Lưu lên online
+                save_data(username, data)
+    
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
             except Exception as e:
                 st.error(f"❌ Lỗi: {e}")
+
 
         if list_mat_hang:
             selected_hang = st.selectbox(
