@@ -552,8 +552,7 @@ if username:
                 st.info("✅ Đã lưu vào lịch sử tính toán!")
             except Exception as e:
                 st.error(f"❌ Lỗi: {e}")
-
-
+      
         if list_mat_hang:
             selected_hang = st.selectbox(
                 "📌 Chọn mặt hàng để xem lịch sử",
